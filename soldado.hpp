@@ -16,57 +16,71 @@
 using namespace std;
 class Soldado {
   protected:
-    std::string nome;
+    string nome;
     double saude, poderDeAtaque;
+    int agility, armor;
+
+    double agility_dodge_probability(int agility) {
+        if (agility > 0)
+            return 0.25 * atan((double)agility / 30) * atan((double)agility / 30);
+        return 0;
+    }
+    double armor_defend_probability(int armor) {
+        if (armor > 0)
+            return 0.5 * atan((double)armor / 50);
+        return 0;
+    }
 
   public:
     Soldado();
-    Soldado(double saude, double poderDeAtaque, std::string nome);
+    Soldado(double HP, double ATK, string N, int AGI, int ARM);
+
     int getPoderdeAtaque();
     int getSaude();
-    std::string getNome();
+    string getNome();
+
     void setPoderdeAtaque(int poderDeAtaque);
     void setSaude(double saude);
-    bool vivo();
-    void defender(double dano);
+
+    virtual void defender(double dano);
     virtual void atacar(Soldado& inimigo);
     void imprimirStatus();
+    bool vivo();
 };
 
 class Elfo : public Soldado {
   public:
-    Elfo(double saude, double poderDeAtaque, std::string nome);
+    Elfo(double HP, double ATK, string N, int AGI, int ARM);
 };
 
 class Anao : public Soldado {
   public:
-    Anao(double saude, double poderDeAtaque, std::string nome);
+    Anao(double HP, double ATK, string N, int AGI, int ARM);
     void atacar(Soldado& inimigo);
 };
 
 class Humano : public Soldado {
   public:
-    Humano(double saude, double poderDeAtaque, std::string nome);
+    Humano(double HP, double ATK, string N, int AGI, int ARM);
     void atacar(Soldado& inimigo);
 };
 
 class Sauron : public Soldado {
   public:
-    Sauron(double saude, double poderDeAtaque, std::string nome);
+    Sauron(double HP, double ATK, string N, int AGI, int ARM);
     void atacar(Soldado& inimigo);
 };
 
 class Orc : public Soldado {
   public:
-    Orc(double saude, double poderDeAtaque, std::string nome);
+    Orc(double HP, double ATK, string N, int AGI, int ARM);
     void atacar(Soldado& inimigo);
 };
 
 class Mago : public Soldado {
   public:
-    Mago(double saude, double poderDeAtaque, std::string nome);
+    Mago(double HP, double ATK, string N, int AGI, int ARM);
     void atacar(Soldado& inimigo);
 };
-
 
 #endif

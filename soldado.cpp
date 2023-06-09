@@ -3,14 +3,24 @@
 mt19937 RNG{random_device{}()};
 
 // Soldado
-Soldado::Soldado(double saude, double poderDeAtaque, string nome) : saude(saude), poderDeAtaque(poderDeAtaque), nome(nome) {}
+Soldado::Soldado(double HP, double ATK, std::string N, int AGI, int ARM) : saude(HP), poderDeAtaque(ATK), nome(N), agility(AGI), armor(ARM) {}
 int Soldado::getPoderdeAtaque() { return poderDeAtaque; }
 int Soldado::getSaude() { return saude; }
 string Soldado::getNome() { return nome; }
 void Soldado::setPoderdeAtaque(int poderDeAtaque) { this->poderDeAtaque = poderDeAtaque; }
 void Soldado::setSaude(double saude) { this->saude = saude; }
 bool Soldado::vivo() {return saude > 0; }
-void Soldado::defender(double dano) { saude = max((double)0, saude - dano); }
+void Soldado::defender(double dano) {
+    if ((double)RNG() / RNG.max() < agility_dodge_probability(agility)) {
+        return;
+    }
+    if ((double)RNG() / RNG.max() < armor_defend_probability(armor)) {
+        double dmg = max((double)0, dano - armor);
+        saude = max((double)0, saude - dmg);
+    } else {
+        saude = max((double)0, saude - dano);
+    }
+}
 void Soldado::atacar(Soldado& inimigo) { inimigo.defender(poderDeAtaque); }
 void Soldado::imprimirStatus() {
     string nome = getNome();
@@ -21,10 +31,10 @@ void Soldado::imprimirStatus() {
 }
 
 // Elfo
-Elfo::Elfo(double saude, double poderDeAtaque, string nome) : Soldado(saude, 1 + poderDeAtaque, nome) {}
+Elfo::Elfo(double HP, double ATK, string N, int AGI, int ARM) : Soldado(HP, ATK + 10, N, AGI + 30, ARM - 10) {}
 
 // Anao
-Anao::Anao(double saude, double poderDeAtaque, string nome) : Soldado(saude, poderDeAtaque, nome) {}
+Anao::Anao(double HP, double ATK, string N, int AGI, int ARM) : Soldado(HP, ATK - 10, N, AGI - 20, ARM + 25) {}
 void Anao::atacar(Soldado& inimigo) {
     int random = RNG() % 100;
     if (random > 40)
@@ -34,7 +44,7 @@ void Anao::atacar(Soldado& inimigo) {
 }
 
 // Humano
-Humano::Humano(double saude, double poderDeAtaque, string nome) : Soldado(saude, poderDeAtaque, nome) {}
+Humano::Humano(double HP, double ATK, string N, int AGI, int ARM) : Soldado(HP, ATK, N, AGI, ARM) {}
 void Humano::atacar(Soldado& inimigo) {
     int random = RNG() % 100;
     inimigo.defender(poderDeAtaque);
@@ -42,7 +52,7 @@ void Humano::atacar(Soldado& inimigo) {
 }
 
 // Sauron
-Sauron::Sauron(double saude, double poderDeAtaque, string nome) : Soldado(10 * saude, poderDeAtaque, nome) {}
+Sauron::Sauron(double HP, double ATK, string N, int AGI, int ARM) : Soldado(10 * HP, ATK, N, AGI, ARM) {}
 void Sauron::atacar(Soldado& inimigo) {
     int random = RNG() % 100;
     if (random < 30)
@@ -52,7 +62,7 @@ void Sauron::atacar(Soldado& inimigo) {
 }
 
 // Orc
-Orc::Orc(double saude, double poderDeAtaque, string nome) : Soldado(saude, poderDeAtaque, nome) {}
+Orc::Orc(double HP, double ATK, std::string N, int AGI, int ARM) : Soldado(HP + 60, ATK, N, AGI - 20, ARM + 20) {}
 void Orc::atacar(Soldado& inimigo) {
     int random = RNG() % 100;
     if (random < 20) {
@@ -63,13 +73,14 @@ void Orc::atacar(Soldado& inimigo) {
 }
 
 // Mago
-Mago::Mago(double saude, double poderDeAtaque, string nome) : Soldado(saude, poderDeAtaque, nome) {}
+Mago::Mago(double HP, double ATK, string N, int AGI, int ARM) : Soldado(HP - 100, ATK + 25, N, AGI + 10, ARM - 10) {}
 void Mago::atacar(Soldado& inimigo) {
     int random = RNG() % 100;
-    if (random < 70) {
+    if (random < 10) {
+        inimigo.defender(2 * poderDeAtaque);
+    } else if (random < 70) {
         inimigo.defender(poderDeAtaque);
     } else {
-        // inimigo.defender(poderDeAtaque);
         setPoderdeAtaque(2 * poderDeAtaque);
         setSaude(100 + saude);
     }
