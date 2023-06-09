@@ -1,3 +1,6 @@
+#ifndef SOLDADO_H
+#define SOLDADO_H
+
 #include <algorithm>
 #include <cstdlib>
 #include <ctime>
@@ -11,41 +14,59 @@
 #include <vector>
 
 using namespace std;
-
 class Soldado {
   protected:
-    string nome;
+    std::string nome;
     double saude, poderDeAtaque;
 
   public:
-    // constructors
     Soldado();
-    Soldado(double saude, double poderDeAtaque, string nome);
-    // getters
+    Soldado(double saude, double poderDeAtaque, std::string nome);
     int getPoderdeAtaque();
     int getSaude();
-    string getNome();
-    bool vivo();
-    // setters
+    std::string getNome();
     void setPoderdeAtaque(int poderDeAtaque);
     void setSaude(double saude);
-    // abstract methods
-    virtual void atacar(Soldado& inimigo) = 0;
-    virtual void defender(double poderDeAtaque) = 0;
-    // print
+    bool vivo();
+    void defender(double dano);
+    virtual void atacar(Soldado& inimigo);
     void imprimirStatus();
 };
 
 class Elfo : public Soldado {
   public:
-    Elfo(double saude, double poderDeAtaque, string nome);
-    void atacar(Soldado& inimigo);
-    void defender(double poderDeAtaque);
+    Elfo(double saude, double poderDeAtaque, std::string nome);
 };
 
 class Anao : public Soldado {
   public:
-    Anao(double saude, double poderDeAtaque, string nome);
+    Anao(double saude, double poderDeAtaque, std::string nome);
     void atacar(Soldado& inimigo);
-    void defender(double poderDeAtaque);
 };
+
+class Humano : public Soldado {
+  public:
+    Humano(double saude, double poderDeAtaque, std::string nome);
+    void atacar(Soldado& inimigo);
+};
+
+class Sauron : public Soldado {
+  public:
+    Sauron(double saude, double poderDeAtaque, std::string nome);
+    void atacar(Soldado& inimigo);
+};
+
+class Orc : public Soldado {
+  public:
+    Orc(double saude, double poderDeAtaque, std::string nome);
+    void atacar(Soldado& inimigo);
+};
+
+class Mago : public Soldado {
+  public:
+    Mago(double saude, double poderDeAtaque, std::string nome);
+    void atacar(Soldado& inimigo);
+};
+
+
+#endif

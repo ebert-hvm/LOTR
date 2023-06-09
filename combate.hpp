@@ -4,8 +4,9 @@ class Combate {
   private:
     vector<unique_ptr<Horda>> hordas;
     Aliados aliados;
-
-  public:
+    int horda_atual;
+    public:
     Combate();
-    bool executarRodada();
+    int executarRodada();
+    bool iniciar();
 };

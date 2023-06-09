@@ -38,37 +38,30 @@ void Equipe::print() {
     }
 }
 
-Horda::Horda(HordaIndex index) {
+Horda::Horda(int index) {
     switch (index) {
-        case primeira:
+        case 0:
             for (int i = 0; i < 10; i++) {
                 string nome = "Orc" + to_string(i + 1);
                 double saude = 100.0;
                 double poderDeAtaque = 10.0;
-                soldados.push_back(make_shared<Anao>(saude, poderDeAtaque, nome));
+                soldados.push_back(make_shared<Orc>(saude, poderDeAtaque, nome));
             }
             break;
-        case segunda:
-            for (int i = 0; i < 5; i++) {
-                string nome = "Orc picudo" + to_string(i + 1);
-                double saude = 100.0;
-                double poderDeAtaque = 10.0;
-                soldados.push_back(make_shared<Elfo>(saude, poderDeAtaque, nome));
+        case 1:
+            for(int i=0;i<5;i++){
+                string nome = "Orc picudo" + to_string(i+1);
+                double saude = 150.0;
+                double poderDeAtaque = 20.0;
+                soldados.push_back(make_shared<Orc>(saude, poderDeAtaque, nome));
             }
             break;
-        case chefao:
-            for (int i = 0; i < 5; i++) {
-                std::string nome = "Orc" + std::to_string(i + 1);
-                double saude = 100.0;
-                double poderDeAtaque = 10.0;
-                soldados.push_back(make_shared<Anao>(saude, poderDeAtaque, nome));
+        case 2:
+            for(int i=0;i<5;i++){
+                std::string nome = "Orc picudo" + to_string(i+1);
+                soldados.push_back(make_shared<Orc>(150, 20, nome));
             }
-            for (int i = 0; i < 5; i++) {
-                std::string nome = "Orc picudo" + std::to_string(i + 1);
-                double saude = 100.0;
-                double poderDeAtaque = 10.0;
-                soldados.push_back(make_shared<Elfo>(saude, poderDeAtaque, nome));
-            }
+            soldados.push_back(make_shared<Sauron>(1000, 50, "Duarte"));
             break;
         default:
             throw("Indice inválido!");
@@ -77,7 +70,35 @@ Horda::Horda(HordaIndex index) {
     randomEnqueue(soldados);
 }
 
-int choiceHandler(int optionsNumber) {
+int Horda::size(){
+    return 3;
+}
+
+void Aliados::montarEquipe(){
+    cout << "Monte sua equipe! \n\n";
+    cout << "Primeiro escolha seu mago:\n1 - Ebo\n2 - Biggers\n";
+    switch(choiceHandler(2)){
+        case 1:
+            soldados.push_back(make_shared<Mago>(500,100,"Ebo"));
+            break;
+        case 2:
+            soldados.push_back(make_shared<Mago>(500,100,"Biggers"));
+            break;
+        default:
+            throw("Escolha inválida");
+            break;
+    }
+    soldados.push_back(make_shared<Elfo>(300,30,"Legolas"));
+    soldados.push_back(make_shared<Anao>(500,40,"Gimli"));
+    soldados.push_back(make_shared<Humano>(200,30,"Aragorn"));
+}
+
+Aliados::Aliados(){
+    montarEquipe();
+    randomEnqueue(soldados);
+}
+
+int choiceHandler(int optionsNumber){
     int choice;
     while (1) {
         if (!(cin >> choice) || choice <= 0 || choice > optionsNumber) {
@@ -87,30 +108,4 @@ int choiceHandler(int optionsNumber) {
         } else
             return choice;
     }
-}
-
-void Aliados::montarEquipe() {
-    cout << "Monte sua equipe! \n\n";
-    cout << "Primeiro escolha seu mago:\n1 - Ebo\n2 - Biggers\n";
-    switch (choiceHandler(2)) {
-        case 1:
-            soldados.push_back(make_shared<Elfo>(100, 100, "Ebo"));
-            break;
-        case 2:
-            soldados.push_back(make_shared<Anao>(100, 100, "Biggers"));
-            break;
-        default:
-            throw("Escolha inválida");
-            break;
-    }
-    cout << "O resto vai ser anao, toma!\n";
-    for (int i = 0; i < 2; i++) {
-        string nome = "anao " + to_string(i);
-        soldados.push_back(make_shared<Anao>(100, 15, nome));
-    }
-}
-
-Aliados::Aliados() {
-    montarEquipe();
-    randomEnqueue(soldados);
 }

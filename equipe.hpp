@@ -1,12 +1,5 @@
 #include "soldado.hpp"
 
-enum HordaIndex {
-    primeira,
-    segunda,
-    chefao,
-    hordaSize
-};
-
 class Equipe {
   protected:
     vector<shared_ptr<Soldado>> soldados;
@@ -20,8 +13,9 @@ class Equipe {
 };
 
 class Horda : public Equipe {
-  public:
-    Horda(HordaIndex index);
+   public:
+    Horda(int index);
+    static int size();
 };
 
 class Aliados : public Equipe {
@@ -29,3 +23,5 @@ class Aliados : public Equipe {
     Aliados();
     void montarEquipe();
 };
+
+int choiceHandler(int optionsNumber);
