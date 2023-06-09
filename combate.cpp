@@ -1,21 +1,20 @@
 #include "combate.hpp"
 
 
-Combate::Combate() : aliados(){
-    for(int i=0;i<hordaSize;i++){
-        hordas.push_back(make_unique<Horda>(static_cast<HordaIndex>(i)));
+Combate::Combate() : aliados(), horda_atual(0){
+    for(int i=0;i<Horda::size();i++){
+        hordas.push_back(make_unique<Horda>(i));
     }
-    //hordas[0]->proximoSoldado()->imprimirStatus();
+    //->proximoSoldado()->imprimirStatus();
     //aliados.proximoSoldado()->imprimirStatus();
 }
 
-bool Combate::executarRodada(){
+int Combate::executarRodada(){
     vector<shared_ptr<Soldado>> aliadosRestantes, inimigosRestantes;
-    if(!(aliados.checarProximoSoldado()) or !(hordas[0]->checarProximoSoldado())) return false;
     shared_ptr<Soldado> aliado, inimigo;
-    while(aliados.checarProximoSoldado() and hordas[0]->checarProximoSoldado()){
+    while(aliados.checarProximoSoldado() and hordas[horda_atual]->checarProximoSoldado()){
         aliado = aliados.proximoSoldado();
-        inimigo = hordas[0]->proximoSoldado();
+        inimigo = hordas[horda_atual]->proximoSoldado();
         cout << aliado->getNome() << " x " << inimigo->getNome() << "\n";
         aliado->atacar(*inimigo);
         if(inimigo->vivo()){
@@ -26,9 +25,33 @@ bool Combate::executarRodada(){
             aliadosRestantes.push_back(aliado);
     }
     aliados.randomEnqueue(aliadosRestantes);
-    hordas[0]->randomEnqueue(inimigosRestantes);
+    hordas[horda_atual]->randomEnqueue(inimigosRestantes);
     aliados.print();
     cout << "\n";
-    hordas[0]->print();
+    hordas[horda_atual]->print();
+    if(!(aliados.checarProximoSoldado()))
+        return -1; // vitoria inimigo
+    if(!(hordas[horda_atual]->checarProximoSoldado()))
+        return 1; // vitoria aliada
+    return 0; // nao acabou a rodada
+}
+
+bool Combate::iniciar(){
+    cin.clear();
+    cin.ignore(numeric_limits<streamsize>::max(), '\n');
+    while(horda_atual < Horda::size()){
+        int res = 0;
+        cout << "Rodada " << horda_atual+1 << ":\n";
+        while(res == 0){
+            res = executarRodada();
+            cout << "\nContinuar...";
+            cin.get();
+        }
+        if(res == -1) return false;
+        cout << "Fim da rodada\n";
+        cin.get();
+        horda_atual++;
+    }
+    horda_atual = 0;
     return true;
 }
