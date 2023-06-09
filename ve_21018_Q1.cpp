@@ -2,12 +2,10 @@
 
 #include <algorithm>
 #include <cstdlib>
-#include "warrior-class.h"
+#include "warrior-class.hpp"
 
 int main() {
-    
-    
-    Soldado* arrSoldier[2] = {new Mago(20, 5, "bigger"), new Mago(10, 10, "eber")};
+    Soldado* arrSoldier[2] = {new Mago(300, 50, "bigger", 25, 20), new Mago(250, 100, "eber", 35, 30)};
 
     arrSoldier[0]->imprimirStatus();
     arrSoldier[1]->imprimirStatus();

@@ -2,51 +2,49 @@
 #include <cstdlib>
 #include <ctime>
 #include <iostream>
+#include <limits>
+#include <memory>
+#include <numeric>
+#include <queue>
+#include <random>
 #include <string>
 #include <vector>
-#include <memory>
-#include <limits>
-#include <queue>
-#include <numeric>
-#include <algorithm>
-#include <random>
 
 using namespace std;
 
-class Soldado
-{
-protected:
+class Soldado {
+  protected:
     string nome;
     double saude, poderDeAtaque;
 
-   public:
+  public:
     // constructors
     Soldado();
     Soldado(double saude, double poderDeAtaque, string nome);
-    //getters
+    // getters
     int getPoderdeAtaque();
     int getSaude();
     string getNome();
     bool vivo();
-    //setters
+    // setters
     void setPoderdeAtaque(int poderDeAtaque);
     void setSaude(double saude);
     // abstract methods
     virtual void atacar(Soldado& inimigo) = 0;
     virtual void defender(double poderDeAtaque) = 0;
-    //print
+    // print
     void imprimirStatus();
 };
 
 class Elfo : public Soldado {
-   public:
+  public:
     Elfo(double saude, double poderDeAtaque, string nome);
     void atacar(Soldado& inimigo);
     void defender(double poderDeAtaque);
 };
 
 class Anao : public Soldado {
-   public:
+  public:
     Anao(double saude, double poderDeAtaque, string nome);
     void atacar(Soldado& inimigo);
     void defender(double poderDeAtaque);

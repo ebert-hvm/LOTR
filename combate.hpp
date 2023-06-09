@@ -1,10 +1,11 @@
 #include "equipe.hpp"
 
-class Combate{
-    private:
+class Combate {
+  private:
     vector<unique_ptr<Horda>> hordas;
     Aliados aliados;
-    public:
+
+  public:
     Combate();
     bool executarRodada();
 };

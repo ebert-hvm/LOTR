@@ -8,11 +8,11 @@ enum HordaIndex {
 };
 
 class Equipe {
-   protected:
+  protected:
     vector<shared_ptr<Soldado>> soldados;
     queue<shared_ptr<Soldado>> fila;
 
-   public:
+  public:
     void randomEnqueue(vector<shared_ptr<Soldado>>);
     shared_ptr<Soldado> proximoSoldado();
     bool checarProximoSoldado();
@@ -20,12 +20,12 @@ class Equipe {
 };
 
 class Horda : public Equipe {
-   public:
+  public:
     Horda(HordaIndex index);
 };
 
 class Aliados : public Equipe {
-   public:
+  public:
     Aliados();
     void montarEquipe();
 };
