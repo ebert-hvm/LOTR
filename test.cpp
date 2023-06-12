@@ -8,6 +8,7 @@
 
 using namespace std;
 mt19937 RNG{random_device{}()};
+normal_distribution<double> NDist(1, 0.1);
 
 double armor_defend_probability(int armor) {
     return 0.5 * std::atan((double)armor / 50);
@@ -20,7 +21,7 @@ double agility_dodge_probability(int agility) {
 int main() {
     int n = 100;
     while (n--) {
-        cout << armor_defend_probability(n) << "\n";
+        cout << NDist(RNG) << "\n";
     }
     // cout << (double)RNG() / RNG.max();
 }

@@ -18,7 +18,7 @@ class Soldado {
   protected:
     string nome;
     double saude, poderDeAtaque;
-    int agility, armor;
+    int agility, armor, critChance;
 
     double agility_dodge_probability(int agility) {
         if (agility > 0)
@@ -33,24 +33,30 @@ class Soldado {
 
   public:
     Soldado();
-    Soldado(double HP, double ATK, string N, int AGI, int ARM);
+    Soldado(double HP, double ATK, string N, int AGI, int ARM, int CRIT = 5);
 
     int getPoderdeAtaque();
     int getSaude();
     string getNome();
+    int getAgilidade();
+    int getArmadura();
+    int getCritChance();
 
-    void setPoderdeAtaque(int poderDeAtaque);
-    void setSaude(double saude);
-
-    virtual void defender(double dano);
+    void setPoderdeAtaque(int ATK);
+    void setSaude(double HP);
+    void setAgilidade(int AGI);
+    void setArmadura(int ARM);
+    void setCritChance(int CRIT);
     virtual void atacar(Soldado& inimigo);
+    virtual void atacar(Soldado& inimigo, double ATK);
+    virtual void defender(double dano);
     void imprimirStatus();
     bool vivo();
 };
 
 class Elfo : public Soldado {
   public:
-    Elfo(double HP, double ATK, string N, int AGI, int ARM);
+    Elfo(double HP, double ATK, string N, int AGI, int ARM, int CRIT = 20);
 };
 
 class Anao : public Soldado {
