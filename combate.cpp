@@ -9,26 +9,46 @@ Combate::Combate() : aliados(), horda_atual(0){
     //aliados.proximoSoldado()->imprimirStatus();
 }
 
-int Combate::executarRodada(){
+int Combate::executarRodada(int rodada){
     vector<shared_ptr<Soldado>> aliadosRestantes, inimigosRestantes;
     shared_ptr<Soldado> aliado, inimigo;
     while(aliados.checarProximoSoldado() and hordas[horda_atual]->checarProximoSoldado()){
+        system("clear");
+        cout << "Horda " << horda_atual + 1 << "\n";
+        cout << "Rodada " << rodada << "\n\n";
         aliado = aliados.proximoSoldado();
         inimigo = hordas[horda_atual]->proximoSoldado();
-        cout << aliado->getNome() << " x " << inimigo->getNome() << "\n";
-        aliado->atacar(*inimigo);
-        if (inimigo->vivo()) {
-            inimigo->atacar(*aliado);
-            inimigosRestantes.push_back(inimigo);
+        cout << aliado->getNome() << " x " << inimigo->getNome() << "\n\n";
+
+        if(aliado->getAgilidade() > inimigo->getAgilidade()){
+            aliado->executarAcao(*inimigo, aliados.getSoldados(), hordas[horda_atual]->getSoldados());
+            inimigo->executarAcao(*aliado, aliados.getSoldados(), hordas[horda_atual]->getSoldados());
         }
-        if (aliado->vivo())
-            aliadosRestantes.push_back(aliado);
+        else{
+            inimigo->executarAcao(*aliado, aliados.getSoldados(), hordas[horda_atual]->getSoldados());
+            aliado->executarAcao(*inimigo, aliados.getSoldados(), hordas[horda_atual]->getSoldados());
+        }
+        if (aliado->vivo()) aliadosRestantes.push_back(aliado);
+        if (inimigo->vivo()) inimigosRestantes.push_back(inimigo);
+
+        aliado->imprimirStatus();
+        inimigo->imprimirStatus();
+        cout << "\nContinuar...";
+        cin.get();
     }
     aliados.randomEnqueue(aliadosRestantes);
     hordas[horda_atual]->randomEnqueue(inimigosRestantes);
+    // Printar status apos os duelos
+    system("clear");
+    cout << "Horda " << horda_atual + 1 << "\n";
+    cout << "Rodada " << rodada + 1 << "\n\n";
+    cout << "Resumo da rodada:\n";
     aliados.print();
     cout << "\n";
     hordas[horda_atual]->print();
+    cout << "\nContinuar...";
+    cin.get();
+
     if(!(aliados.checarProximoSoldado()))
         return -1; // vitoria inimigo
     if(!(hordas[horda_atual]->checarProximoSoldado()))
@@ -40,16 +60,12 @@ bool Combate::iniciar(){
     cin.clear();
     cin.ignore(numeric_limits<streamsize>::max(), '\n');
     while(horda_atual < Horda::size()){
-        int res = 0;
-        cout << "Rodada " << horda_atual+1 << ":\n";
+        int res = 0, index = 1;
         while(res == 0){
-            res = executarRodada();
-            cout << "\nContinuar...";
-            cin.get();
+            res = executarRodada(index);
+            index++;
         }
         if(res == -1) return false;
-        cout << "Fim da rodada\n";
-        cin.get();
         horda_atual++;
     }
     horda_atual = 0;

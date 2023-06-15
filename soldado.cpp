@@ -21,6 +21,7 @@ void Soldado::setCritChance(int CRIT) { this->critChance = CRIT; }
 bool Soldado::vivo() { return saude > 0; }
 
 void Soldado::executarAcao(Soldado& inimigo, vector<shared_ptr<Soldado>> aliadosTeam, vector<shared_ptr<Soldado>> inimigosTeam) {
+    if(!vivo()) return;
     atacar(inimigo);
     return;
 }
@@ -48,8 +49,8 @@ void Soldado::imprimirStatus() {
     string nome = getNome();
     nome.resize(15, ' ');
     cout << nome << " | ";
-    cout << "hp: " << getSaude() << " | ";
-    cout << "atk: " << getPoderdeAtaque() << "\n";
+    cout << "hp: " << getSaude() << "\n";
+    //cout << "atk: " << getPoderdeAtaque() << "\n";
 }
 
 // Elfo

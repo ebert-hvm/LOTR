@@ -1,5 +1,6 @@
 #include "equipe.hpp"
 
+//EQUIPE
 void Equipe::randomEnqueue(vector<shared_ptr<Soldado>> soldadosVivos) {
     vector<int> permutation(soldadosVivos.size());
     iota(permutation.begin(), permutation.end(), 0);
@@ -38,6 +39,11 @@ void Equipe::print() {
     }
 }
 
+vector<shared_ptr<Soldado>> Equipe::getSoldados(){
+    return soldados;
+};
+
+// HORDA
 Horda::Horda(int index) {
     switch (index) {
         case 0:
@@ -45,7 +51,7 @@ Horda::Horda(int index) {
                 string nome = "Orc" + to_string(i + 1);
                 double saude = 100.0;
                 double poderDeAtaque = 10.0;
-                soldados.push_back(make_shared<Orc>(saude, poderDeAtaque, nome));
+                soldados.push_back(make_shared<Orc>(saude, poderDeAtaque, nome, 10, 10));
             }
             break;
         case 1:
@@ -53,15 +59,15 @@ Horda::Horda(int index) {
                 string nome = "Orc picudo" + to_string(i+1);
                 double saude = 150.0;
                 double poderDeAtaque = 20.0;
-                soldados.push_back(make_shared<Orc>(saude, poderDeAtaque, nome));
+                soldados.push_back(make_shared<Orc>(saude, poderDeAtaque, nome, 35, 40));
             }
             break;
         case 2:
             for(int i=0;i<5;i++){
                 std::string nome = "Orc picudo" + to_string(i+1);
-                soldados.push_back(make_shared<Orc>(150, 20, nome));
+                soldados.push_back(make_shared<Orc>(150, 20, nome, 35, 40));
             }
-            soldados.push_back(make_shared<Sauron>(1000, 50, "Duarte"));
+            soldados.push_back(make_shared<Sauron>(1000, 50, "Duarte", 10, 70));
             break;
         default:
             throw("Indice inválido!");
@@ -74,23 +80,30 @@ int Horda::size(){
     return 3;
 }
 
+//ALIADOS
 void Aliados::montarEquipe(){
     cout << "Monte sua equipe! \n\n";
     cout << "Primeiro escolha seu mago:\n1 - Ebo\n2 - Biggers\n";
     switch(choiceHandler(2)){
         case 1:
-            soldados.push_back(make_shared<Mago>(500,100,"Ebo"));
+            soldados.push_back(make_shared<Mago>(500, 100, "Ebo", 30, 40));
             break;
         case 2:
-            soldados.push_back(make_shared<Mago>(500,100,"Biggers"));
+            soldados.push_back(make_shared<Mago>(500,100,"Biggers", 30, 40));
             break;
         default:
             throw("Escolha inválida");
             break;
     }
-    soldados.push_back(make_shared<Elfo>(300,30,"Legolas"));
-    soldados.push_back(make_shared<Anao>(500,40,"Gimli"));
-    soldados.push_back(make_shared<Humano>(200,30,"Aragorn"));
+    
+    soldados.push_back(make_shared<Elfo>(300,30,"Legolas", 80, 20));
+    soldados.push_back(make_shared<Elfo>(300,30,"Elrond", 80, 20));
+    soldados.push_back(make_shared<Anao>(500,40,"Gimli", 20, 60));
+    soldados.push_back(make_shared<Humano>(200,30,"Aragorn", 50, 40));
+    soldados.push_back(make_shared<Humano>(250,25,"Boromir", 40, 45));
+    //soldados.push_back(make_shared<Hobbit>(150,20,"Frodo", 90, 30));
+    //soldados.push_back(make_shared<Hobbit>(150,15,"Sam", 80, 40));
+    //soldados.push_back(make_shared<Hobbit>(180,30,"Bilbo", 50, 40));
 }
 
 Aliados::Aliados(){

@@ -2,3 +2,5 @@
 *.sh
 .vscode
 *test*  
+*gdb*
+peda*

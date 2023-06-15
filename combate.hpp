@@ -7,6 +7,6 @@ class Combate {
     int horda_atual;
     public:
     Combate();
-    int executarRodada();
+    int executarRodada(int rodada);
     bool iniciar();
 };
