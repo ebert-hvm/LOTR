@@ -2,25 +2,26 @@
 #include <iostream>
 #include <limits>
 #include <numeric>
+#include <queue>
 #include <random>
 #include <vector>
-#include <queue>
 
 using namespace std;
+mt19937 RNG{random_device{}()};
+normal_distribution<double> NDist(1, 0.1);
 
-int choiceHandler(int optionsNumber) {
-    int choice;
-    while (1) {
-        if (!(cin >> choice) or choice <= 0 or choice > optionsNumber) {
-            cout << "Escolha Inválida!\n";
-            cin.clear();
-            cin.ignore(numeric_limits<streamsize>::max(), '\n');
-        } else
-            return choice;
-    }
+double armor_defend_probability(int armor) {
+    return 0.5 * std::atan((double)armor / 50);
+}
+
+double agility_dodge_probability(int agility) {
+    return 0.25 * std::atan((double)agility / 30) * std::atan((double)agility / 30);
 }
 
 int main() {
-    int a = 2;
-    if(0 and (a=1)) cout << a;
+    int n = 100;
+    while (n--) {
+        cout << NDist(RNG) << "\n";
+    }
+    // cout << (double)RNG() / RNG.max();
 }

@@ -1,7 +1,7 @@
 #include "equipe.hpp"
 
-class Combate{
-    private:
+class Combate {
+  private:
     vector<unique_ptr<Horda>> hordas;
     Aliados aliados;
     int horda_atual;

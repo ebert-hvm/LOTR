@@ -17,11 +17,11 @@ int Combate::executarRodada(){
         inimigo = hordas[horda_atual]->proximoSoldado();
         cout << aliado->getNome() << " x " << inimigo->getNome() << "\n";
         aliado->atacar(*inimigo);
-        if(inimigo->vivo()){
+        if (inimigo->vivo()) {
             inimigo->atacar(*aliado);
             inimigosRestantes.push_back(inimigo);
         }
-        if(aliado->vivo())
+        if (aliado->vivo())
             aliadosRestantes.push_back(aliado);
     }
     aliados.randomEnqueue(aliadosRestantes);

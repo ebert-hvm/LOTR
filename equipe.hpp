@@ -1,11 +1,11 @@
 #include "soldado.hpp"
 
 class Equipe {
-   protected:
+  protected:
     vector<shared_ptr<Soldado>> soldados;
     queue<shared_ptr<Soldado>> fila;
 
-   public:
+  public:
     void randomEnqueue(vector<shared_ptr<Soldado>>);
     shared_ptr<Soldado> proximoSoldado();
     bool checarProximoSoldado();
@@ -19,7 +19,7 @@ class Horda : public Equipe {
 };
 
 class Aliados : public Equipe {
-   public:
+  public:
     Aliados();
     void montarEquipe();
 };
