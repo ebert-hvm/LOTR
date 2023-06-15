@@ -95,7 +95,9 @@ void Aliados::montarEquipe(){
             throw("Escolha inválida");
             break;
     }
-    
+    //soldados.push_back(make_shared<Hobbit>(150,20,"Ebo", 90, 30));
+    //soldados.push_back(make_shared<Hobbit>(150,20,"Biggers", 90, 30));
+    //soldados.push_back(make_shared<Hobbit>(150,20,"Gandalf", 90, 30));
     soldados.push_back(make_shared<Elfo>(300,30,"Legolas", 80, 20));
     soldados.push_back(make_shared<Elfo>(300,30,"Elrond", 80, 20));
     soldados.push_back(make_shared<Anao>(500,40,"Gimli", 20, 60));
