@@ -47,8 +47,9 @@ class Soldado {
     void setAgilidade(int AGI);
     void setArmadura(int ARM);
     void setCritChance(int CRIT);
+    virtual void executarAcao(Soldado& inimigo, vector<shared_ptr<Soldado>> aliados, vector<shared_ptr<Soldado>> inimigos);
     virtual void atacar(Soldado& inimigo);
-    virtual void atacar(Soldado& inimigo, double ATK);
+    void atacar(Soldado& inimigo, double ATK);
     virtual void defender(double dano);
     void imprimirStatus();
     bool vivo();

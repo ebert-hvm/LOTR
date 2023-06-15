@@ -20,12 +20,15 @@ void Soldado::setCritChance(int CRIT) { this->critChance = CRIT; }
 
 bool Soldado::vivo() { return saude > 0; }
 
+void Soldado::executarAcao(Soldado& inimigo, vector<shared_ptr<Soldado>> aliadosTeam, vector<shared_ptr<Soldado>> inimigosTeam) {
+    atacar(inimigo);
+    return;
+}
 void Soldado::atacar(Soldado& inimigo) { atacar(inimigo, poderDeAtaque); }
 void Soldado::atacar(Soldado& inimigo, double ATK) {
     ATK = ATK * NDist(RNG);
     int random = RNG() % 100;
     if (random < critChance) {
-        cout << "\nCRIT!\n";
         inimigo.defender(2 * ATK);
     } else
         inimigo.defender(ATK);
