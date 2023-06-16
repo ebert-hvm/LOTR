@@ -91,11 +91,11 @@ void Elfo::executarAcao(Soldado& inimigo, vector<shared_ptr<Soldado>>& aliados, 
         }
     }
     // Ataque no inimigo atual
-    atacar(inimigo);
+    Soldado::atacar(inimigo);
     if (copia_de_inimigos.size() == 0) return;
     // Ataque no segundo inimigo aleatoria (nao morto nem o atual)
     shuffle(copia_de_inimigos.begin(), copia_de_inimigos.end(), RNG);
-    atacar(**find(inimigos.begin(), inimigos.end(), copia_de_inimigos[0]));
+    Soldado::atacar(**find(inimigos.begin(), inimigos.end(), copia_de_inimigos[0]));
 }
 void Elfo::descricao() {
     cout << "Stats:\nAGI + 30\nARM - 25\nCRIT: 20%\n\n";
