@@ -58,6 +58,7 @@ class Soldado {
     virtual void atacar(Soldado& inimigo);
     virtual void atacar(Soldado& inimigo, double ATK);
     virtual void defender(double dano);
+    virtual void defender(Soldado& inimigo, double dano);
 
     void imprimirStatus();
     virtual void descricao();
@@ -84,14 +85,15 @@ class Anao : public Soldado {
 class Humano : public Soldado {
   public:
     Humano(double HP, double ATK, string N, int AGI, int ARM);
-    void atacar(Soldado& inimigo);
+    void atacar(Soldado& inimigo, double ATK);
+    void defender(Soldado& inimigo, double dano);
     void descricao();
 };
 
 class Sauron : public Soldado {
   public:
     Sauron(double HP, double ATK, string N, int AGI, int ARM);
-    void atacar(Soldado& inimigo);
+    void executarAcao(Soldado& inimigo, vector<shared_ptr<Soldado>>& aliados, vector<shared_ptr<Soldado>>& inimigos);
     void descricao();
 };
 

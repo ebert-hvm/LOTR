@@ -67,7 +67,7 @@ Horda::Horda(int index) {
                 std::string nome = "Orc picudo" + to_string(i+1);
                 soldados.push_back(make_shared<Orc>(150, 20, nome, 35, 40));
             }
-            soldados.push_back(make_shared<Sauron>(1000, 50, "Duarte", 10, 70));
+            soldados.push_back(make_shared<Sauron>(500, 50, "Duarte", 10, 70));
             break;
         default:
             throw("Indice inválido!");

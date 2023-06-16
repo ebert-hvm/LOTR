@@ -31,32 +31,39 @@ void Soldado::executarAcao(Soldado& inimigo, vector<shared_ptr<Soldado>>& aliado
 }
 void Soldado::atacar(Soldado& inimigo) { atacar(inimigo, poderDeAtaque); }
 void Soldado::atacar(Soldado& inimigo, double ATK) {
+    if(!inimigo.vivo()) {
+        cout << inimigo.getNome() << " chega ao duelo morto...\n\n";
+        return;
+    }
     ATK = ATK * NDist(RNG);
     int random = RNG() % 100;
     if (random < critChance) {
         cout << fixed << setprecision(2) << "CRIT!  Dano do ataque de " << nome << ": " << 2 * ATK << "\n";
-        inimigo.defender(2 * ATK);
+        inimigo.defender(*this, 2 * ATK);
     } else {
         cout << fixed << setprecision(2) << "Dano do ataque de " << nome << ": " << ATK << "\n";
-        inimigo.defender(ATK);
+        inimigo.defender(*this, ATK);
     }
 }
 void Soldado::defender(double dano) {
     if ((double)RNG() / RNG.max() < agility_dodge_probability(agility)) {
-        cout << "Ataque esquivado!\n";
+        cout << nome << " esquivou do ataque!\n\n";
         return;
     }
     dano = dano * (1 - armor_defend_percentage(armor));
     saude = max((double)0, saude - (dano));
     cout << fixed << setprecision(2) << "Dano reduzido em " << (int)(armor_defend_percentage(armor) * 100) << "% pela armadura.\nDano recebido por " << nome << ": " << dano << "\n\n";
 }
+void Soldado::defender(Soldado& inimigo, double dano) {
+    defender(dano);
+}
 
 void Soldado::imprimirStatus() {
     string nome = getNome();
     nome.resize(15, ' ');
     cout << nome << " | ";
-    cout << "hp: " << getSaude() << " | ";
-    cout << "atk: " << getPoderdeAtaque() << "\n";
+    cout << "hp: " << fixed << setw(5) << (int)getSaude() << "/" << (int)getMaxHP() << " | ";
+    cout << "atk: " << (int)getPoderdeAtaque() << "\n";
 }
 void Soldado::descricao() { return; }
 
@@ -66,7 +73,7 @@ bool Soldado::operator==(Soldado& bixo) {
 }
 
 // Elfo
-Elfo::Elfo(double HP, double ATK, string N, int AGI, int ARM, int CRIT) : Soldado(HP, ATK + 10, N, AGI + 30, ARM - 10, CRIT) {}
+Elfo::Elfo(double HP, double ATK, string N, int AGI, int ARM, int CRIT) : Soldado(HP, ATK, N, AGI + 30, ARM - 25, CRIT) {}
 void Elfo::executarAcao(Soldado& inimigo, vector<shared_ptr<Soldado>>& aliados, vector<shared_ptr<Soldado>>& inimigos) {
     if (!vivo()) return;
     auto lambda = [&inimigo](const shared_ptr<Soldado>& obj) { return obj->getNome() == inimigo.getNome(); };
@@ -75,10 +82,13 @@ void Elfo::executarAcao(Soldado& inimigo, vector<shared_ptr<Soldado>>& aliados, 
     // Removendo o inimigo atual
     shared_ptr<Soldado> ptr_inimigo = make_shared<Soldado>(inimigo);
     vector<shared_ptr<Soldado>>::iterator it = find_if(copia_de_inimigos.begin(), copia_de_inimigos.end(), lambda);
-    copia_de_inimigos.erase(it);
+    if (it != copia_de_inimigos.end()) copia_de_inimigos.erase(it);
     // Removendo inimigos mortos
     for (it = copia_de_inimigos.begin(); it != copia_de_inimigos.end(); it++) {
-        if (!(*it)->vivo()) copia_de_inimigos.erase(it);
+        if (!(*it)->vivo()) {
+            it = copia_de_inimigos.erase(it);
+            it--;
+        }
     }
     // Ataque no inimigo atual
     atacar(inimigo);
@@ -88,7 +98,8 @@ void Elfo::executarAcao(Soldado& inimigo, vector<shared_ptr<Soldado>>& aliados, 
     atacar(**find(inimigos.begin(), inimigos.end(), copia_de_inimigos[0]));
 }
 void Elfo::descricao() {
-    cout << "Stats:\nATK + 10, AGI + 30\nARM - 10\nCRIT: 20%\n\n";
+    cout << "Stats:\nAGI + 30\nARM - 25\nCRIT: 20%\n\n";
+    cout << "Ataque: Alem do inimigo no duelo, acerta outro inimigo aleatoriamente, caso seja possivel\n";
 }
 
 // Anao
@@ -98,7 +109,7 @@ void Anao::atacar(Soldado& inimigo) {
     double DMG = poderDeAtaque * (1 + 0.4 * (maxHP - saude) / maxHP);
 
     int random = RNG() % 100;
-    if (random > 40)
+    if (random < 40)
         Soldado::atacar(inimigo, 20 + DMG);
     else
         Soldado::atacar(inimigo, 0.5 * DMG);
@@ -110,34 +121,63 @@ void Anao::defender(double dano) {
 }
 void Anao::descricao() {
     cout << "Stats:\nARM + 25\nATK - 10, AGI - 20\nCRIT: 5%\n\n";
-    cout << "O Anao da dano extra para inimigos com pouca vida, tendo ainda chance de dar 20 de dano extra no seu ataque, porem ele regularmente faz um ataque fraco com metade do seu dano. Toda vez que o Anao é atacado, ele ganha +3 de ATK\n";
+    cout << "Ataque: Dano extra para inimigos com pouca vida. 40\% de dar 20 de dano extra no seu ataque, porem caso contrario faz um ataque fraco com metade do seu dano\n";
+    cout << "Defesa: Toda vez que defende, ganha +3 ATK";
 }
 
 // Humano
 Humano::Humano(double HP, double ATK, string N, int AGI, int ARM) : Soldado(HP, ATK, N, AGI, ARM) {}
-void Humano::atacar(Soldado& inimigo) {
+void Humano::atacar(Soldado& inimigo, double ATK) {
     // Deal extra damage to low HP enemies
-    double DMG = poderDeAtaque * (1 + 0.6 * (inimigo.getMaxHP() - inimigo.getSaude()) / inimigo.getMaxHP());
+    double DMG = ATK * (1 + 0.6 * (inimigo.getMaxHP() - inimigo.getSaude()) / inimigo.getMaxHP());
 
     int random = RNG() % 100;
     Soldado::atacar(inimigo, DMG);
-    if (random < 10) Soldado::atacar(inimigo, DMG);
+    if (random < 15) {
+        cout << nome << " realizou um segundo ataque";
+        Soldado::atacar(inimigo, DMG);
+    }
+}
+void Humano::defender(Soldado& inimigo, double dano) {
+    int random = RNG() % 100;
+    Soldado::defender(dano);
+    if (random < 25) {
+        cout << "O " << nome << " realizou um contra ataque!\n";
+        Humano::atacar(inimigo, poderDeAtaque / 2);
+    }
 }
 void Humano::descricao() {
     cout << "Stats:\nCrit: 5%\n\n";
+    cout << "Ataque: 15\% de ataque duplo";
+    cout << "Defesa: 25\% de contra-atacar com a metade do poder de ataque cada vez que toma dano";
 }
 
 // Sauron
 Sauron::Sauron(double HP, double ATK, string N, int AGI, int ARM) : Soldado(5 * HP, ATK, N, AGI, ARM) {}
-void Sauron::atacar(Soldado& inimigo) {
+void Sauron::executarAcao(Soldado& inimigo, vector<shared_ptr<Soldado>>& aliados, vector<shared_ptr<Soldado>>& inimigos) {
+    if(!vivo()) return;
     int random = RNG() % 100;
-    if (random < 20)
+    if (random < 20) {
+        cout << nome << " executa um ataque pesado!\n";
         Soldado::atacar(inimigo, 1.5 * poderDeAtaque);
-    else if (random < 40) {
+    } else if (random < 40) {
+        cout << nome << " executa 3 ataques leves!\n";
         Soldado::atacar(inimigo, poderDeAtaque / 2);
         Soldado::atacar(inimigo, poderDeAtaque / 2);
         Soldado::atacar(inimigo, poderDeAtaque / 2);
+    } else if (random < 60 && saude / maxHP <= 0.25) {
+        cout << nome << " entra em uma furia descontrolada! Ele ataca TODOS!\n";
+        for (auto it = aliados.begin(); it != aliados.end(); it++) {
+            if (!(*it)->vivo()) continue;
+            Soldado::atacar(**it, poderDeAtaque * 0.75);
+        }
+        for (auto it = inimigos.begin(); it != inimigos.end(); it++) {
+            if (!(*it)->vivo() || (*it)->getNome() == nome) continue;
+            Soldado::atacar(**it, poderDeAtaque * 0.75);
+        }
     } else {
+        cout << nome << " ataca um aliado e ganha +5 ATK!\n";
+        // Ataque padrao com self buff
         Soldado::atacar(inimigo, poderDeAtaque);
         setPoderdeAtaque(poderDeAtaque + 5);
     }
