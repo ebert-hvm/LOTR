@@ -21,12 +21,18 @@ int Combate::executarRodada(int rodada){
         cout << aliado->getNome() << " x " << inimigo->getNome() << "\n\n";
 
         if(aliado->getAgilidade() > inimigo->getAgilidade()){
+            cout << "--------------ACAO DO ALIADO--------------\n\n";
             aliado->executarAcao(*inimigo, aliados.getSoldados(), hordas[horda_atual]->getSoldados());
+            cout << "--------------ACAO DO INIMIGO-------------\n\n";
             inimigo->executarAcao(*aliado, aliados.getSoldados(), hordas[horda_atual]->getSoldados());
+            cout << "--------------RESUMO DO DUELO-------------\n\n";
         }
         else{
+            cout << "--------------ACAO DO INIMIGO-------------\n\n";
             inimigo->executarAcao(*aliado, aliados.getSoldados(), hordas[horda_atual]->getSoldados());
+            cout << "--------------ACAO DO ALIADO--------------\n\n";
             aliado->executarAcao(*inimigo, aliados.getSoldados(), hordas[horda_atual]->getSoldados());
+            cout << "--------------RESUMO DO DUELO-------------\n\n";
         }
         if (aliado->vivo()) aliadosRestantes.push_back(aliado);
         if (inimigo->vivo()) inimigosRestantes.push_back(inimigo);

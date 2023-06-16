@@ -26,13 +26,15 @@ void Soldado::executarAcao(Soldado& inimigo) {
     executarAcao(inimigo, empty_vec, empty_vec);
 }
 void Soldado::executarAcao(Soldado& inimigo, vector<shared_ptr<Soldado>>& aliadosTeam, vector<shared_ptr<Soldado>>& inimigosTeam) {
-    if (!vivo()) return;
+    if (!vivo()) {
+        cout << nome << " chega ao duelo morto...\n\n";
+        return;
+    }
     atacar(inimigo);
 }
 void Soldado::atacar(Soldado& inimigo) { atacar(inimigo, poderDeAtaque); }
 void Soldado::atacar(Soldado& inimigo, double ATK) {
     if (!inimigo.vivo()) {
-        cout << inimigo.getNome() << " chega ao duelo morto...\n\n";
         return;
     }
     ATK = ATK * NDist(RNG);
@@ -51,8 +53,9 @@ void Soldado::defender(double dano) {
         return;
     }
     dano = dano * (1 - armor_defend_percentage(armor));
-    saude = max((double)0, saude - (dano));
     cout << fixed << setprecision(2) << "Dano reduzido em " << (int)(armor_defend_percentage(armor) * 100) << "% pela armadura.\nDano recebido por " << nome << ": " << dano << "\n\n";
+    saude = max((double)0, saude - (dano));
+    if (!vivo()) cout << nome << " morreu...\n\n";
 }
 void Soldado::defender(Soldado& inimigo, double dano) {
     defender(dano);
@@ -70,7 +73,10 @@ void Soldado::descricao() { return; }
 // Elfo
 Elfo::Elfo(double HP, double ATK, string N, int AGI, int ARM, int CRIT) : Soldado(HP, ATK, N, AGI + 30, ARM - 25, CRIT) {}
 void Elfo::executarAcao(Soldado& inimigo, vector<shared_ptr<Soldado>>& aliados, vector<shared_ptr<Soldado>>& inimigos) {
-    if (!vivo()) return;
+    if (!vivo()) {
+        cout << inimigo.getNome() << " chega ao duelo morto...\n\n";
+        return;
+    }
     auto lambda = [&inimigo](const shared_ptr<Soldado>& obj) { return obj->getNome() == inimigo.getNome(); };
     // Copia para nao mudar o original
     vector<shared_ptr<Soldado>> copia_de_inimigos = inimigos;
@@ -150,7 +156,10 @@ void Humano::descricao() {
 // Sauron
 Sauron::Sauron(double HP, double ATK, string N, int AGI, int ARM) : Soldado(5 * HP, ATK, N, AGI, ARM) {}
 void Sauron::executarAcao(Soldado& inimigo, vector<shared_ptr<Soldado>>& aliados, vector<shared_ptr<Soldado>>& inimigos) {
-    if (!vivo()) return;
+    if (!vivo()) {
+        cout << inimigo.getNome() << " chega ao duelo morto...\n\n";
+        return;
+    }
     int random = RNG() % 100;
     if (random < 20) {
         cout << nome << " executa um ataque pesado!\n";
@@ -160,7 +169,7 @@ void Sauron::executarAcao(Soldado& inimigo, vector<shared_ptr<Soldado>>& aliados
         Soldado::atacar(inimigo, poderDeAtaque / 2);
         Soldado::atacar(inimigo, poderDeAtaque / 2);
         Soldado::atacar(inimigo, poderDeAtaque / 2);
-    } else if (random < 70 && saude / maxHP <= 0.25) {
+    } else if (random < 70 && saude / maxHP <= 0.3) {
         cout << nome << " entra em uma furia descontrolada! Ele ataca TODOS!\n";
         for (auto it = aliados.begin(); it != aliados.end(); it++) {
             if (!(*it)->vivo()) continue;
@@ -171,11 +180,11 @@ void Sauron::executarAcao(Soldado& inimigo, vector<shared_ptr<Soldado>>& aliados
             Soldado::atacar(**it, poderDeAtaque * 0.75);
         }
     } else {
-        cout << nome << " ataca e ganha +5 ATK e recupera +25 HP!\n";
+        cout << nome << " ataca e ganha +5 ATK e recupera +30 HP!\n";
         // Ataque padrao com self buff
         Soldado::atacar(inimigo, poderDeAtaque);
         setPoderdeAtaque(poderDeAtaque + 5);
-        setSaude(min(saude + 25, saude));
+        setSaude(min(saude + 30, saude));
     }
 }
 void Sauron::descricao() {
@@ -199,7 +208,10 @@ void Orc::descricao() {
 // Mago
 Mago::Mago(double HP, double ATK, string N, int AGI, int ARM) : Soldado(HP - 100, ATK + 25, N, AGI + 10, ARM - 10) {}
 void Mago::executarAcao(Soldado& inimigo, vector<shared_ptr<Soldado>>& aliados, vector<shared_ptr<Soldado>>& inimigos) {
-    if (!vivo()) return;
+    if (!vivo()) {
+        cout << inimigo.getNome() << " chega ao duelo morto...\n\n";
+        return;
+    }
     int random = RNG() % 100;
     if (random < 50) {
         cout << nome << " aplica um efeito de cura em todos os seus aliados:\n";
@@ -213,20 +225,48 @@ void Mago::executarAcao(Soldado& inimigo, vector<shared_ptr<Soldado>>& aliados, 
             (*it)->setSaude(min((*it)->getSaude() + 20, (*it)->getMaxHP()));
         }
         cout << "\n";
+    } else if (random < 60) {
+        cout << nome << " aplica um efeito de cura em si mesmo e aumenta seu poder de ataque exponencialmente!\n";
+        cout << "ATK: " << (int)poderDeAtaque << "  ->  ";
+        setPoderdeAtaque(1.6 * poderDeAtaque);
+        cout << (int)poderDeAtaque << "\n\n";
+        setSaude(min(100 + saude, saude));
     } else
         atacar(inimigo);
 }
 void Mago::atacar(Soldado& inimigo) {
-    int random = RNG() % 100;
-    if (random < 20) {
-        Soldado::atacar(inimigo, 2 * poderDeAtaque);
-    } else if (random < 75) {
-        Soldado::atacar(inimigo, poderDeAtaque);
-    } else {
-        setPoderdeAtaque(1.6 * poderDeAtaque);
-        setSaude(min(100 + saude, saude));
-    }
+    int random = RNG() % 40;
+    Soldado::atacar(inimigo, poderDeAtaque * (1 + (float)random / 100));
 }
 void Mago::descricao() {
     cout << "Stats:\nATK + 25, AGI + 10\nHP - 100, ARM - 10\nCrit: 5%\n\n";
 }
+
+// Hobbit
+int Hobbit::number_of_hobbits = 0;
+const int Hobbit::group_attack_probability[6] = {0, 0, 29, 20, 16, 13};
+Hobbit::Hobbit(double HP, double ATK, string N, int AGI, int ARM) : Soldado(HP, ATK - 20, N, AGI + 20, ARM - 10) {
+    number_of_hobbits++;
+}
+void Hobbit::executarAcao(Soldado& inimigo, vector<shared_ptr<Soldado>>& aliados, vector<shared_ptr<Soldado>>& inimigos) {
+    if (!vivo()) {
+        cout << inimigo.getNome() << " chega ao duelo morto...\n\n";
+        return;
+    }
+    int random = RNG() % 100;
+    if (random < group_attack_probability[number_of_hobbits]) {
+        cout << nome << " inspira todos os demais Hobbits, fazendo um grande ataque em grupo!\n\n";
+        for (auto it = aliados.begin(); it != aliados.end(); it++) {
+            if (shared_ptr<Hobbit> dummy_hobbit = dynamic_pointer_cast<Hobbit>(*it)) {
+                if (!(*it)->vivo()) continue;
+                (*it)->atacar(inimigo);
+            }
+        }
+    } else
+        Soldado::atacar(inimigo);
+}
+void Hobbit::defender(Soldado& inimigo, double dano) {
+    Soldado::defender(inimigo, dano);
+    if (!vivo()) number_of_hobbits--;
+}
+int Hobbit::getNofHobbits() { return number_of_hobbits; }

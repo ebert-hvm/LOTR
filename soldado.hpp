@@ -13,7 +13,6 @@
 #include <random>
 #include <string>
 #include <vector>
-#include <cstdlib>
 
 using namespace std;
 class Soldado {
@@ -24,7 +23,7 @@ class Soldado {
 
     double agility_dodge_probability(int agility) {
         if (agility > 0)
-            return 0.25 * atan((double)agility / 30) * atan((double)agility / 30);
+            return 0.27 * atan((double)agility / 30) * atan((double)agility / 30);
         return 0;
     }
     double armor_defend_percentage(int armor) {
@@ -52,7 +51,7 @@ class Soldado {
     void setAgilidade(int AGI);
     void setArmadura(int ARM);
     void setCritChance(int CRIT);
-  
+
     virtual void executarAcao(Soldado& inimigo);
     virtual void executarAcao(Soldado& inimigo, vector<shared_ptr<Soldado>>& aliados, vector<shared_ptr<Soldado>>& inimigos);
     virtual void atacar(Soldado& inimigo);
@@ -108,6 +107,17 @@ class Mago : public Soldado {
     void executarAcao(Soldado& inimigo, vector<shared_ptr<Soldado>>& aliados, vector<shared_ptr<Soldado>>& inimigos);
     void atacar(Soldado& inimigo);
     void descricao();
+};
+
+class Hobbit : public Soldado {
+    static const int group_attack_probability[6];
+    static int number_of_hobbits;
+
+  public:
+    Hobbit(double HP, double ATK, string N, int AGI, int ARM);
+    void executarAcao(Soldado& inimigo, vector<shared_ptr<Soldado>>& aliados, vector<shared_ptr<Soldado>>& inimigos);
+    void defender(Soldado& inimigo, double dano);
+    int getNofHobbits();
 };
 
 #endif

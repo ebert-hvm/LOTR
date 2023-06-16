@@ -98,9 +98,9 @@ void Aliados::montarEquipe(){
     //soldados.push_back(make_shared<Hobbit>(150,20,"Ebo", 90, 30));
     //soldados.push_back(make_shared<Hobbit>(150,20,"Biggers", 90, 30));
     //soldados.push_back(make_shared<Hobbit>(150,20,"Gandalf", 90, 30));
-    soldados.push_back(make_shared<Elfo>(300,30,"Legolas", 80, 20));
-    soldados.push_back(make_shared<Elfo>(300,30,"Elrond", 80, 20));
-    soldados.push_back(make_shared<Anao>(500,40,"Gimli", 20, 60));
+    soldados.push_back(make_shared<Hobbit>(300,30,"Hobbit1", 80, 20));
+    soldados.push_back(make_shared<Hobbit>(300,30,"Hobbit2", 80, 20));
+    soldados.push_back(make_shared<Hobbit>(500,40,"Hobbit3", 20, 60));
     soldados.push_back(make_shared<Humano>(200,30,"Aragorn", 50, 40));
     soldados.push_back(make_shared<Humano>(250,25,"Boromir", 40, 45));
     //soldados.push_back(make_shared<Hobbit>(150,20,"Frodo", 90, 30));
