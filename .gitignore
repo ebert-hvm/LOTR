@@ -1,6 +1,6 @@
 *.exe
 *.sh
 .vscode
-*test*  
+*test*
 *gdb*
 peda*
