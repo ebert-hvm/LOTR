@@ -10,7 +10,7 @@ class Equipe {
     shared_ptr<Soldado> proximoSoldado();
     bool checarProximoSoldado();
     void print();
-    vector<shared_ptr<Soldado>> getSoldados();
+    vector<shared_ptr<Soldado>>& getSoldados();
 };
 
 class Horda : public Equipe {

@@ -54,18 +54,21 @@ class Soldado {
     void setCritChance(int CRIT);
   
     virtual void executarAcao(Soldado& inimigo);
-    virtual void executarAcao(Soldado& inimigo, vector<shared_ptr<Soldado>> aliados, vector<shared_ptr<Soldado>> inimigos);
+    virtual void executarAcao(Soldado& inimigo, vector<shared_ptr<Soldado>>& aliados, vector<shared_ptr<Soldado>>& inimigos);
     virtual void atacar(Soldado& inimigo);
     virtual void atacar(Soldado& inimigo, double ATK);
     virtual void defender(double dano);
 
     void imprimirStatus();
-    virtual void descricao() = 0;
+    virtual void descricao();
+
+    bool operator==(Soldado& bixo);
 };
 
 class Elfo : public Soldado {
   public:
     Elfo(double HP, double ATK, string N, int AGI, int ARM, int CRIT = 20);
+    void executarAcao(Soldado& inimigo, vector<shared_ptr<Soldado>>& aliados, vector<shared_ptr<Soldado>>& inimigos);
     // void defender(double dano);
     void descricao();
 };

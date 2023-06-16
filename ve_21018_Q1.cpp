@@ -11,7 +11,7 @@ int main() {
     arrSoldier[0]->descricao();
     arrSoldier[0]->imprimirStatus();
     arrSoldier[1]->imprimirStatus();
-    arrSoldier[0]->executarAcao(*(arrSoldier[1]));
+    arrSoldier[2]->executarAcao(*(arrSoldier[1]));
     arrSoldier[0]->imprimirStatus();
     arrSoldier[1]->imprimirStatus();
 

@@ -39,7 +39,7 @@ void Equipe::print() {
     }
 }
 
-vector<shared_ptr<Soldado>> Equipe::getSoldados(){
+vector<shared_ptr<Soldado>>& Equipe::getSoldados(){
     return soldados;
 };
 

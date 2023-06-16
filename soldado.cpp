@@ -25,8 +25,8 @@ void Soldado::executarAcao(Soldado& inimigo) {
     vector<shared_ptr<Soldado>> empty_vec;
     executarAcao(inimigo, empty_vec, empty_vec);
 }
-void Soldado::executarAcao(Soldado& inimigo, vector<shared_ptr<Soldado>> aliadosTeam, vector<shared_ptr<Soldado>> inimigosTeam) {
-    if(!vivo()) return;
+void Soldado::executarAcao(Soldado& inimigo, vector<shared_ptr<Soldado>>& aliadosTeam, vector<shared_ptr<Soldado>>& inimigosTeam) {
+    if (!vivo()) return;
     atacar(inimigo);
 }
 void Soldado::atacar(Soldado& inimigo) { atacar(inimigo, poderDeAtaque); }
@@ -34,10 +34,10 @@ void Soldado::atacar(Soldado& inimigo, double ATK) {
     ATK = ATK * NDist(RNG);
     int random = RNG() % 100;
     if (random < critChance) {
-        cout << fixed << setprecision(2) << "CRIT!  Dano do ataque: " << 2 * ATK << "\n";
+        cout << fixed << setprecision(2) << "CRIT!  Dano do ataque de " << nome << ": " << 2 * ATK << "\n";
         inimigo.defender(2 * ATK);
     } else {
-        cout << fixed << setprecision(2) << "Dano do ataque: " << ATK << "\n";
+        cout << fixed << setprecision(2) << "Dano do ataque de " << nome << ": " << ATK << "\n";
         inimigo.defender(ATK);
     }
 }
@@ -48,19 +48,45 @@ void Soldado::defender(double dano) {
     }
     dano = dano * (1 - armor_defend_percentage(armor));
     saude = max((double)0, saude - (dano));
-    cout << fixed << setprecision(2) << "Dano reduzido em " << (int)(armor_defend_percentage(armor) * 100) << "% pela armadura.\nDano recebido: " << dano << "\n";
+    cout << fixed << setprecision(2) << "Dano reduzido em " << (int)(armor_defend_percentage(armor) * 100) << "% pela armadura.\nDano recebido por " << nome << ": " << dano << "\n\n";
 }
 
 void Soldado::imprimirStatus() {
     string nome = getNome();
     nome.resize(15, ' ');
     cout << nome << " | ";
-    cout << "hp: " << getSaude() << "\n";
-    //cout << "atk: " << getPoderdeAtaque() << "\n";
+    cout << "hp: " << getSaude() << " | ";
+    cout << "atk: " << getPoderdeAtaque() << "\n";
+}
+void Soldado::descricao() { return; }
+
+bool Soldado::operator==(Soldado& bixo) {
+    cout << nome << " " << bixo.getNome();
+    return nome == bixo.getNome();
 }
 
 // Elfo
 Elfo::Elfo(double HP, double ATK, string N, int AGI, int ARM, int CRIT) : Soldado(HP, ATK + 10, N, AGI + 30, ARM - 10, CRIT) {}
+void Elfo::executarAcao(Soldado& inimigo, vector<shared_ptr<Soldado>>& aliados, vector<shared_ptr<Soldado>>& inimigos) {
+    if (!vivo()) return;
+    auto lambda = [&inimigo](const shared_ptr<Soldado>& obj) { return obj->getNome() == inimigo.getNome(); };
+    // Copia para nao mudar o original
+    vector<shared_ptr<Soldado>> copia_de_inimigos = inimigos;
+    // Removendo o inimigo atual
+    shared_ptr<Soldado> ptr_inimigo = make_shared<Soldado>(inimigo);
+    vector<shared_ptr<Soldado>>::iterator it = find_if(copia_de_inimigos.begin(), copia_de_inimigos.end(), lambda);
+    copia_de_inimigos.erase(it);
+    // Removendo inimigos mortos
+    for (it = copia_de_inimigos.begin(); it != copia_de_inimigos.end(); it++) {
+        if (!(*it)->vivo()) copia_de_inimigos.erase(it);
+    }
+    // Ataque no inimigo atual
+    atacar(inimigo);
+    if (copia_de_inimigos.size() == 0) return;
+    // Ataque no segundo inimigo aleatoria (nao morto nem o atual)
+    shuffle(copia_de_inimigos.begin(), copia_de_inimigos.end(), RNG);
+    atacar(**find(inimigos.begin(), inimigos.end(), copia_de_inimigos[0]));
+}
 void Elfo::descricao() {
     cout << "Stats:\nATK + 10, AGI + 30\nARM - 10\nCRIT: 20%\n\n";
 }
@@ -97,7 +123,7 @@ void Humano::atacar(Soldado& inimigo) {
     Soldado::atacar(inimigo, DMG);
     if (random < 10) Soldado::atacar(inimigo, DMG);
 }
-void Humano::descricao(){
+void Humano::descricao() {
     cout << "Stats:\nCrit: 5%\n\n";
 }
 
@@ -116,7 +142,7 @@ void Sauron::atacar(Soldado& inimigo) {
         setPoderdeAtaque(poderDeAtaque + 5);
     }
 }
-void Sauron::descricao(){
+void Sauron::descricao() {
     cout << "Stats:\nHP * 5\nCrit: 5%\n\n";
 }
 
@@ -130,7 +156,7 @@ void Orc::atacar(Soldado& inimigo) {
     } else
         Soldado::atacar(inimigo, poderDeAtaque);
 }
-void Orc::descricao(){
+void Orc::descricao() {
     cout << "Stats:\nHP + 60, ARM + 20\nAGI - 20\nCrit: 5%\n\n";
 }
 
@@ -151,6 +177,6 @@ void Mago::atacar(Soldado& inimigo) {
         setSaude(100 + saude);
     }
 }
-void Mago::descricao(){
+void Mago::descricao() {
     cout << "Stats:\nATK + 25, AGI + 10\nHP - 100, ARM - 10\nCrit: 5%\n\n";
 }
