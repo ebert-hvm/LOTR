@@ -31,7 +31,7 @@ void Soldado::executarAcao(Soldado& inimigo, vector<shared_ptr<Soldado>>& aliado
 }
 void Soldado::atacar(Soldado& inimigo) { atacar(inimigo, poderDeAtaque); }
 void Soldado::atacar(Soldado& inimigo, double ATK) {
-    if(!inimigo.vivo()) {
+    if (!inimigo.vivo()) {
         cout << inimigo.getNome() << " chega ao duelo morto...\n\n";
         return;
     }
@@ -62,15 +62,10 @@ void Soldado::imprimirStatus() {
     string nome = getNome();
     nome.resize(15, ' ');
     cout << nome << " | ";
-    cout << "hp: " << fixed << setw(5) << (int)getSaude() << "/" << (int)getMaxHP() << " | ";
-    cout << "atk: " << (int)getPoderdeAtaque() << "\n";
+    cout << "HP: " << fixed << setw(4) << (int)getSaude() << "/" << setw(4) << (int)getMaxHP() << " | ";
+    cout << "ATK: " << (int)getPoderdeAtaque() << "\n";
 }
 void Soldado::descricao() { return; }
-
-bool Soldado::operator==(Soldado& bixo) {
-    cout << nome << " " << bixo.getNome();
-    return nome == bixo.getNome();
-}
 
 // Elfo
 Elfo::Elfo(double HP, double ATK, string N, int AGI, int ARM, int CRIT) : Soldado(HP, ATK, N, AGI + 30, ARM - 25, CRIT) {}
@@ -134,7 +129,7 @@ void Humano::atacar(Soldado& inimigo, double ATK) {
     int random = RNG() % 100;
     Soldado::atacar(inimigo, DMG);
     if (random < 15) {
-        cout << nome << " realizou um segundo ataque";
+        cout << nome << " realizou um segundo ataque!\n";
         Soldado::atacar(inimigo, DMG);
     }
 }
@@ -155,7 +150,7 @@ void Humano::descricao() {
 // Sauron
 Sauron::Sauron(double HP, double ATK, string N, int AGI, int ARM) : Soldado(5 * HP, ATK, N, AGI, ARM) {}
 void Sauron::executarAcao(Soldado& inimigo, vector<shared_ptr<Soldado>>& aliados, vector<shared_ptr<Soldado>>& inimigos) {
-    if(!vivo()) return;
+    if (!vivo()) return;
     int random = RNG() % 100;
     if (random < 20) {
         cout << nome << " executa um ataque pesado!\n";
@@ -165,7 +160,7 @@ void Sauron::executarAcao(Soldado& inimigo, vector<shared_ptr<Soldado>>& aliados
         Soldado::atacar(inimigo, poderDeAtaque / 2);
         Soldado::atacar(inimigo, poderDeAtaque / 2);
         Soldado::atacar(inimigo, poderDeAtaque / 2);
-    } else if (random < 60 && saude / maxHP <= 0.25) {
+    } else if (random < 70 && saude / maxHP <= 0.25) {
         cout << nome << " entra em uma furia descontrolada! Ele ataca TODOS!\n";
         for (auto it = aliados.begin(); it != aliados.end(); it++) {
             if (!(*it)->vivo()) continue;
@@ -176,10 +171,11 @@ void Sauron::executarAcao(Soldado& inimigo, vector<shared_ptr<Soldado>>& aliados
             Soldado::atacar(**it, poderDeAtaque * 0.75);
         }
     } else {
-        cout << nome << " ataca um aliado e ganha +5 ATK!\n";
+        cout << nome << " ataca e ganha +5 ATK e recupera +25 HP!\n";
         // Ataque padrao com self buff
         Soldado::atacar(inimigo, poderDeAtaque);
         setPoderdeAtaque(poderDeAtaque + 5);
+        setSaude(min(saude + 25, saude));
     }
 }
 void Sauron::descricao() {
@@ -202,19 +198,33 @@ void Orc::descricao() {
 
 // Mago
 Mago::Mago(double HP, double ATK, string N, int AGI, int ARM) : Soldado(HP - 100, ATK + 25, N, AGI + 10, ARM - 10) {}
-void Mago::executarAcao(Soldado& inimigo, vector<shared_ptr<Soldado>> aliados, vector<shared_ptr<Soldado>> inimigos) {
-    if (saude <= 0) return;
-    atacar(inimigo);
+void Mago::executarAcao(Soldado& inimigo, vector<shared_ptr<Soldado>>& aliados, vector<shared_ptr<Soldado>>& inimigos) {
+    if (!vivo()) return;
+    int random = RNG() % 100;
+    if (random < 50) {
+        cout << nome << " aplica um efeito de cura em todos os seus aliados:\n";
+        for (auto it = aliados.begin(); it != aliados.end(); it++) {
+            if (!(*it)->vivo()) continue;
+            cout << (*it)->getNome() << " recebe AGI + 2, CRIT + 2, ATK + 5, HP + 20\n";
+            (*it)->setAgilidade((*it)->getAgilidade() + 2);
+            // (*it)->setArmadura((*it)->getArmadura() + 2);
+            (*it)->setCritChance((*it)->getCritChance() + 2);
+            (*it)->setPoderdeAtaque((*it)->getPoderdeAtaque() + 5);
+            (*it)->setSaude(min((*it)->getSaude() + 20, (*it)->getMaxHP()));
+        }
+        cout << "\n";
+    } else
+        atacar(inimigo);
 }
 void Mago::atacar(Soldado& inimigo) {
     int random = RNG() % 100;
-    if (random < 10) {
+    if (random < 20) {
         Soldado::atacar(inimigo, 2 * poderDeAtaque);
-    } else if (random < 70) {
+    } else if (random < 75) {
         Soldado::atacar(inimigo, poderDeAtaque);
     } else {
-        setPoderdeAtaque(2 * poderDeAtaque);
-        setSaude(100 + saude);
+        setPoderdeAtaque(1.6 * poderDeAtaque);
+        setSaude(min(100 + saude, saude));
     }
 }
 void Mago::descricao() {

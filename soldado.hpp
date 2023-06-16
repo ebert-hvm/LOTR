@@ -62,8 +62,6 @@ class Soldado {
 
     void imprimirStatus();
     virtual void descricao();
-
-    bool operator==(Soldado& bixo);
 };
 
 class Elfo : public Soldado {
@@ -107,7 +105,7 @@ class Orc : public Soldado {
 class Mago : public Soldado {
   public:
     Mago(double HP, double ATK, string N, int AGI, int ARM);
-    void executarAcao(Soldado& inimigo, vector<shared_ptr<Soldado>> aliados, vector<shared_ptr<Soldado>> inimigos);
+    void executarAcao(Soldado& inimigo, vector<shared_ptr<Soldado>>& aliados, vector<shared_ptr<Soldado>>& inimigos);
     void atacar(Soldado& inimigo);
     void descricao();
 };
