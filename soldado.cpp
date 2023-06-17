@@ -4,7 +4,7 @@ mt19937 RNG{random_device{}()};
 normal_distribution<double> NDist(1, 0.1);
 
 // Soldado
-Soldado::Soldado(double HP, double ATK, std::string N, int AGI, int ARM, int CRIT) : saude(HP), maxHP(HP), poderDeAtaque(ATK), nome(N), agility(AGI), armor(ARM), critChance(CRIT) {}
+Soldado::Soldado(double HP, double ATK, std::string N, int AGI, int DEF, int CRIT) : saude(HP), maxHP(HP), poderDeAtaque(ATK), nome(N), agility(AGI), armor(DEF), critChance(CRIT) {}
 double Soldado::agility_dodge_probability(int agility) {
     if (agility > 0) return 0.27 * atan((double)agility / 30) * atan((double)agility / 30);
     return 0;
@@ -28,7 +28,7 @@ void Soldado::setPoderdeAtaque(int ATK) { this->poderDeAtaque = ATK; }
 void Soldado::setSaude(double HP) { this->saude = HP; }
 void Soldado::setMaxHP(double HP) { this->maxHP = HP; }
 void Soldado::setAgilidade(int AGI) { this->agility = AGI; }
-void Soldado::setArmadura(int ARM) { this->armor = ARM; }
+void Soldado::setArmadura(int DEF) { this->armor = DEF; }
 void Soldado::setCritChance(int CRIT) { this->critChance = CRIT; }
 
 void Soldado::executarAcao(Soldado& inimigo) {
@@ -106,8 +106,8 @@ void Elfo::executarAcao(Soldado& inimigo, vector<shared_ptr<Soldado>>& aliados, 
     }
     // Ataque no inimigo atual
     Soldado::atacar(inimigo);
-    if (copia_de_inimigos.size() == 0) return;
     // Ataque no segundo inimigo aleatoria (nao morto nem o atual)
+    if (copia_de_inimigos.size() == 0) return;
     shuffle(copia_de_inimigos.begin(), copia_de_inimigos.end(), RNG);
     Soldado::atacar(**find(inimigos.begin(), inimigos.end(), copia_de_inimigos[0]));
 }
@@ -238,6 +238,24 @@ void Orc::descricao() {
 //string OrcBerserk::raca = "OrcBerserk";
 OrcBerserk::OrcBerserk(double HP, double ATK, string N, int AGI, int ARM, int CRIT) : Soldado(HP + 100, ATK + 10, N, AGI - 10, ARM + 20, CRIT) {}
 void OrcBerserk::atacar(Soldado& inimigo) {
+    int random = RNG() % 100;
+    int ene_armor = inimigo.getArmadura();
+    double DMG = poderDeAtaque;
+    // Dano bonus = 5% vida do inimigo
+    if (saude / maxHP < 0.2) DMG += 0.05 * inimigo.getSaude();
+    if (random < 30) {
+        cout << nome << " faz um ataque que ignora a armadura de " << inimigo.getNome() << " !\n";
+        inimigo.setArmadura(0);
+        Soldado::atacar(inimigo, DMG);
+        inimigo.setArmadura(ene_armor);
+    } else if (random < 40) {
+        cout << nome << " sacrifica parte de seu ataque para aumentar sua armadura\n";
+        cout << "ATK: " << (int)poderDeAtaque << "  -->  " << (int)(poderDeAtaque * 0.66) << "\n";
+        cout << "DEF: " << armor << "  -->  " << (int)(1.5 * armor) << "\n\n";
+        setPoderdeAtaque(0.66 * poderDeAtaque);
+        setArmadura((int)(1.5 * armor));
+    } else
+        Soldado::atacar(inimigo, DMG);
 }
 void OrcBerserk::defender(Soldado& inimigo, double dano) {
     cout << "A armadura de espinhos de " << nome << " causa 6 de dano a " << inimigo.getNome() << "\n";
@@ -245,11 +263,71 @@ void OrcBerserk::defender(Soldado& inimigo, double dano) {
     Soldado::defender(dano);
 }
 void OrcBerserk::descricao() {
-    cout << "Stats:\nHP + 100, ARM + 20, ATK + 10\nAGI - 10\nCrit - 10%\n\n";
+    cout << "Stats:\nHP + 100, DEF + 20, ATK + 10\nAGI - 10\nCrit: 10%\n\n";
+}
+
+// Saruman
+string Saruman::raca = "Saruman";
+Saruman::Saruman(double HP, double ATK, string N, int AGI, int DEF, int CRIT) : Soldado(HP + 40, ATK + 15, N, AGI + 10, DEF - 25, CRIT) {}
+void Saruman::executarAcao(Soldado& inimigo, vector<shared_ptr<Soldado>>& aliados, vector<shared_ptr<Soldado>>& inimigos) {
+    if (!vivo()) {
+        cout << nome << " chega ao duelo morto...\n\n";
+        return;
+    }
+    int random = RNG() % 100;
+    if (random < 25) {
+        // Remove inimigos mortos de uma copia dos inimigos
+        vector<shared_ptr<Soldado>> copia_de_inimigos = inimigos;
+        for (auto it = copia_de_inimigos.begin(); it != copia_de_inimigos.end(); it++) {
+            if (!(*it)->vivo()) {
+                it = copia_de_inimigos.erase(it);
+                it--;
+            }
+        }
+        // Se o unico vivo e ele mesmo, fazer diferente
+        if (copia_de_inimigos.size() == 1) {
+            cout << nome << " executa uma encantacao, se fortalecendo:\n";
+            cout << "HP + 30, ATK + 10, DEF + 5, AGI + 5, CRIT + 1\n\n";
+            setSaude(min(maxHP, saude + 30));
+            setPoderdeAtaque(poderDeAtaque + 10);
+            setArmadura(armor + 5);
+            setAgilidade(agility + 5);
+            setCritChance(critChance + 1);
+            return;
+        }
+        shuffle(copia_de_inimigos.begin(), copia_de_inimigos.end(), RNG);
+        shared_ptr<Soldado> alvo = *find(inimigos.begin(), inimigos.end(), copia_de_inimigos[0]);
+        cout << nome << " rouba atributos de um de seus proprios aliados, " << alvo->getNome() << ", tornando-o fraco e incapacitado\n\n";
+        setSaude(min(maxHP, saude + 30));
+        setPoderdeAtaque(poderDeAtaque + alvo->getPoderdeAtaque() / 2);
+        setArmadura(armor + alvo->getArmadura() / 2);
+        setAgilidade(agility + alvo->getAgilidade() / 2);
+        setCritChance(critChance + alvo->getCritChance() / 2);
+        alvo->setSaude(0.6 * alvo->getSaude());
+        alvo->setPoderdeAtaque(10);
+        alvo->setArmadura(5);
+        alvo->setAgilidade(5);
+        alvo->setCritChance(1);
+    } else if (random < 50) {
+        cout << nome << " suga a forca de " << inimigo.getNome() << ", se curando no processo\n\n";
+        setSaude(min(maxHP, saude + 30));
+        inimigo.setPoderdeAtaque(0.9 * inimigo.getPoderdeAtaque() - 5);
+        inimigo.setAgilidade(inimigo.getAgilidade() - 3);
+        inimigo.setArmadura(inimigo.getArmadura() - 3);
+    } else {
+        atacar(inimigo);
+    }
+}
+void Saruman::atacar(Soldado& inimigo) {
+    // Mais dano quanto mais vida tem
+    double DMG = poderDeAtaque * (1 + 0.25 * (saude / maxHP));
+    Soldado::atacar(inimigo, DMG);
+}
+void Saruman::descricao() {
+    cout << "Stats:\nHP + 40, AGI + 10, ATK + 15\nDEF - 25\nCrit: 10%\n\n";
 }
 
 // Mago
-//string Mago::raca = "Mago";
 Mago::Mago(double HP, double ATK, string N, int AGI, int ARM) : Soldado(HP - 100, ATK + 25, N, AGI + 10, ARM - 10) {
     raca = "Mago";
 }
@@ -263,7 +341,7 @@ void Mago::executarAcao(Soldado& inimigo, vector<shared_ptr<Soldado>>& aliados, 
         cout << nome << " aplica um efeito de cura em todos os seus aliados e os inspira:\n";
         for (auto it = aliados.begin(); it != aliados.end(); it++) {
             if (!(*it)->vivo()) continue;
-            cout << (*it)->getNome() << " recebe AGI + 2, ARM + 2, CRIT + 2, ATK + 5, HP + 20\n";
+            cout << (*it)->getNome() << " recebe AGI + 2, DEF + 2, CRIT + 2, ATK + 5, HP + 20\n";
             (*it)->setAgilidade((*it)->getAgilidade() + 2);
             (*it)->setArmadura((*it)->getArmadura() + 2);
             (*it)->setCritChance((*it)->getCritChance() + 2);
