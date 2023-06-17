@@ -108,7 +108,7 @@ void Aliados::montarEquipe()
 {
     int cont = 0;
     vector<shared_ptr<Soldado>> vec = {
-        make_shared<Mago>(400, 40, "Gandolf", 30, 40),
+        make_shared<Mago>(400, 40, "Gandalf", 30, 40),
         make_shared<Hobbit>(240, 48, "Frodo", 70, 30),
         make_shared<Hobbit>(225, 45, "Bilbo", 70, 30),
         make_shared<Hobbit>(220, 36, "Sam", 70, 30),
