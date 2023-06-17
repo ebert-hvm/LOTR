@@ -21,6 +21,7 @@ string Soldado::getNome() { return nome; }
 int Soldado::getAgilidade() { return agility; }
 int Soldado::getArmadura() { return armor; }
 int Soldado::getCritChance() { return critChance; }
+string Soldado::getRaca(){return raca;}
 bool Soldado::vivo() { return saude > 0; }
 
 void Soldado::setPoderdeAtaque(int ATK) { this->poderDeAtaque = ATK; }
@@ -77,11 +78,13 @@ void Soldado::imprimirStatus() {
     cout << "HP: " << fixed << setw(4) << (int)getSaude() << "/" << setw(4) << (int)getMaxHP() << " | ";
     cout << "ATK: " << (int)getPoderdeAtaque() << "\n";
 }
-void Soldado::descricao() { return; }
+//void Soldado::descricao() { return; }
 
 // Elfo
-string Elfo::raca = "Elfo";
-Elfo::Elfo(double HP, double ATK, string N, int AGI, int ARM, int CRIT) : Soldado(HP, ATK, N, AGI + 30, ARM - 25, CRIT) {}
+//string Elfo::raca = "Elfo";
+Elfo::Elfo(double HP, double ATK, string N, int AGI, int ARM, int CRIT) : Soldado(HP, ATK, N, AGI + 30, ARM - 25, CRIT) {
+    raca = "Elfo";
+}
 void Elfo::executarAcao(Soldado& inimigo, vector<shared_ptr<Soldado>>& aliados, vector<shared_ptr<Soldado>>& inimigos) {
     if (!vivo()) {
         cout << nome << " chega ao duelo morto...\n\n";
@@ -109,13 +112,16 @@ void Elfo::executarAcao(Soldado& inimigo, vector<shared_ptr<Soldado>>& aliados, 
     Soldado::atacar(**find(inimigos.begin(), inimigos.end(), copia_de_inimigos[0]));
 }
 void Elfo::descricao() {
-    cout << "Stats:\nAGI + 30\nARM - 25\nCRIT: 20%\n\n";
-    cout << "Ataque: Alem do inimigo no duelo, acerta outro inimigo aleatoriamente, caso seja possivel\n\n";
+    cout << "-------------------------------------------ELFO------------------------------------------\n";
+    cout << "Stats: AGI + 30, ARM - 25, CRIT - 20%\n";
+    cout << "Ataque: Alem do inimigo no duelo, acerta outro inimigo aleatoriamente, caso seja possivel\n";
 }
 
 // Anao
-string Anao::raca = "Anao";
-Anao::Anao(double HP, double ATK, string N, int AGI, int ARM) : Soldado(HP, ATK - 10, N, AGI - 20, ARM + 25) {}
+//string Anao::raca = "Anao";
+Anao::Anao(double HP, double ATK, string N, int AGI, int ARM) : Soldado(HP, ATK - 10, N, AGI - 20, ARM + 25) {
+    raca = "Anao";
+}
 void Anao::atacar(Soldado& inimigo) {
     // Extra damage when low HP
     double DMG = poderDeAtaque * (1 + 0.4 * (maxHP - saude) / maxHP);
@@ -132,14 +138,17 @@ void Anao::defender(double dano) {
     Soldado::defender(dano);
 }
 void Anao::descricao() {
-    cout << "Stats:\nARM + 25\nATK - 10, AGI - 20\nCRIT: 5%\n\n";
-    cout << "Ataque: Dano extra para inimigos com pouca vida. 40\% de dar 20 de dano extra no seu ataque, porem caso contrario faz um ataque fraco com metade do seu dano\n";
+    cout << "-------------------------------------------ANAO------------------------------------------\n";
+    cout << "Stats: ARM + 25, ATK - 10, AGI - 20, CRIT - 5%\n";
+    cout << "Ataque: Dano extra para inimigos com pouca vida. Além disso, pode dar 20 de dano extra,\nou atacar com metade do ATK\n";
     cout << "Defesa: Toda vez que defende, ganha +3 ATK\n\n";
 }
 
 // Humano
-string Humano::raca = "Humano";
-Humano::Humano(double HP, double ATK, string N, int AGI, int ARM) : Soldado(HP, ATK, N, AGI, ARM) {}
+//string Humano::raca = "Humano";
+Humano::Humano(double HP, double ATK, string N, int AGI, int ARM) : Soldado(HP, ATK, N, AGI, ARM) {
+    raca = "Humano";
+}
 void Humano::atacar(Soldado& inimigo, double ATK) {
     // Deal extra damage to low HP enemies
     double DMG = ATK * (1 + 0.6 * (inimigo.getMaxHP() - inimigo.getSaude()) / inimigo.getMaxHP());
@@ -160,13 +169,14 @@ void Humano::defender(Soldado& inimigo, double dano) {
     }
 }
 void Humano::descricao() {
-    cout << "Stats:\nCrit: 5%\n\n";
+    cout << "------------------------------------------HUMANO-----------------------------------------\n";
+    cout << "Stats: Crit - 5%\n";
     cout << "Ataque: 15\% de ataque duplo\n";
-    cout << "Defesa: 25\% de contra-atacar com a metade do poder de ataque cada vez que toma dano\n\n";
+    cout << "Defesa: 25\% de contra-atacar com metade do ATK\n";
 }
 
 // Sauron
-string Sauron::raca = "Sauron";
+//string Sauron::raca = "Sauron";
 Sauron::Sauron(double HP, double ATK, string N, int AGI, int ARM) : Soldado(5 * HP, ATK, N, AGI, ARM) {}
 void Sauron::executarAcao(Soldado& inimigo, vector<shared_ptr<Soldado>>& aliados, vector<shared_ptr<Soldado>>& inimigos) {
     if (!vivo()) {
@@ -205,7 +215,7 @@ void Sauron::descricao() {
 }
 
 // Orc
-string Orc::raca = "Orc";
+//string Orc::raca = "Orc";
 Orc::Orc(double HP, double ATK, std::string N, int AGI, int ARM) : Soldado(HP + 60, ATK, N, AGI - 20, ARM + 30) {}
 void Orc::atacar(Soldado& inimigo) {
     int random = RNG() % 100;
@@ -221,11 +231,11 @@ void Orc::defender(double dano) {
     Soldado::defender(dano);
 }
 void Orc::descricao() {
-    cout << "Stats:\nHP + 60, ARM + 30\nAGI - 20\nCrit: 5%\n\n";
+    cout << "Stats:\nHP + 60, ARM + 30\nAGI - 20\nCrit - 5%\n\n";
 }
 
 // OrcBerserk
-string OrcBerserk::raca = "OrcBerserk";
+//string OrcBerserk::raca = "OrcBerserk";
 OrcBerserk::OrcBerserk(double HP, double ATK, string N, int AGI, int ARM, int CRIT) : Soldado(HP + 100, ATK + 10, N, AGI - 10, ARM + 20, CRIT) {}
 void OrcBerserk::atacar(Soldado& inimigo) {
 }
@@ -235,12 +245,14 @@ void OrcBerserk::defender(Soldado& inimigo, double dano) {
     Soldado::defender(dano);
 }
 void OrcBerserk::descricao() {
-    cout << "Stats:\nHP + 100, ARM + 20, ATK + 10\nAGI - 10\nCrit: 10%\n\n";
+    cout << "Stats:\nHP + 100, ARM + 20, ATK + 10\nAGI - 10\nCrit - 10%\n\n";
 }
 
 // Mago
-string Mago::raca = "mago";
-Mago::Mago(double HP, double ATK, string N, int AGI, int ARM) : Soldado(HP - 100, ATK + 25, N, AGI + 10, ARM - 10) {}
+//string Mago::raca = "Mago";
+Mago::Mago(double HP, double ATK, string N, int AGI, int ARM) : Soldado(HP - 100, ATK + 25, N, AGI + 10, ARM - 10) {
+    raca = "Mago";
+}
 void Mago::executarAcao(Soldado& inimigo, vector<shared_ptr<Soldado>>& aliados, vector<shared_ptr<Soldado>>& inimigos) {
     if (!vivo()) {
         cout << nome << " chega ao duelo morto...\n\n";
@@ -273,17 +285,20 @@ void Mago::atacar(Soldado& inimigo) {
     Soldado::atacar(inimigo, poderDeAtaque * (1 + (float)random / 100));
 }
 void Mago::descricao() {
-    cout << "Stats:\nATK + 25, AGI + 10\nHP - 100, ARM - 10\nCrit: 5%\n\n";
+    cout << "-------------------------------------------MAGO------------------------------------------\n";
+    cout << "Stats: ATK + 25, AGI + 10, HP - 100, ARM - 10, Crit - 5%\n";
     cout << "Ataque: Sempre da dano extra de 0-40\%\n";
-    cout << "Habilidade: 50\% das vezes melhora os stats dos seus aliados, ou 40\% executa seu ataque, ou 10\% se cura e aumenta o proprio ATK multiplicativamente\n\n";
+    cout << "Habilidade: Pode Melhorar os stats dos seus aliados ou se curar e aumentar o proprio ATK\n";
 }
 
 // Hobbit
-string Hobbit::raca = "Hobbit";
+//string Hobbit::raca = "Hobbit";
 int Hobbit::number_of_hobbits = 0;
 const int Hobbit::group_attack_probability[6] = {0, 0, 29, 20, 16, 13};
 Hobbit::~Hobbit() { number_of_hobbits--; }
-Hobbit::Hobbit(double HP, double ATK, string N, int AGI, int ARM) : Soldado(HP, ATK - 20, N, AGI + 20, ARM - 10) { number_of_hobbits++; }
+Hobbit::Hobbit(double HP, double ATK, string N, int AGI, int ARM) : Soldado(HP, ATK - 20, N, AGI + 20, ARM - 10) {
+    number_of_hobbits++; raca = "Hobbit";
+}
 void Hobbit::executarAcao(Soldado& inimigo, vector<shared_ptr<Soldado>>& aliados, vector<shared_ptr<Soldado>>& inimigos) {
     if (!vivo()) {
         cout << nome << " chega ao duelo morto...\n\n";
@@ -306,7 +321,8 @@ void Hobbit::defender(Soldado& inimigo, double dano) {
     if (!vivo()) number_of_hobbits--;
 }
 void Hobbit::descricao() {
-    cout << "Stats:\nAGI + 20\nATK - 20, AGI - 10\nCRIT: 5%\n\n";
-    cout << "Ataque: ~50\% de chamar todos os outros Hobbits do time para atacarem junto\n\n";
+    cout << "------------------------------------------HOBBIT-----------------------------------------\n";
+    cout << "Stats: AGI + 20, ATK - 20, ARM - 10, CRIT - 5%\n";
+    cout << "Ataque: ~50\% de chamar todos os outros Hobbits do time para atacarem junto\n";
 }
 int Hobbit::getNofHobbits() { return number_of_hobbits; }

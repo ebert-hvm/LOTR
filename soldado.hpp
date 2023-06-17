@@ -17,6 +17,7 @@
 using namespace std;
 class Soldado {
   protected:
+    string raca;
     string nome;
     double saude, maxHP, poderDeAtaque;
     int agility, armor, critChance;
@@ -27,7 +28,7 @@ class Soldado {
   public:
     Soldado();
     Soldado(double HP, double ATK, string N, int AGI, int ARM, int CRIT = 5);
-
+    string getRaca();
     double getPoderdeAtaque();
     double getSaude();
     double getMaxHP();
@@ -52,11 +53,11 @@ class Soldado {
     virtual void defender(Soldado& inimigo, double dano);
 
     void imprimirStatus();
-    virtual void descricao();
+    //virtual void descricao();
 };
 
 class Elfo : public Soldado {
-    static string raca;
+    //static string raca;
 
   public:
     Elfo(double HP, double ATK, string N, int AGI, int ARM, int CRIT = 20);
@@ -66,7 +67,7 @@ class Elfo : public Soldado {
 };
 
 class Anao : public Soldado {
-    static string raca;
+    //static string raca;
 
   public:
     Anao(double HP, double ATK, string N, int AGI, int ARM);
@@ -76,7 +77,7 @@ class Anao : public Soldado {
 };
 
 class Humano : public Soldado {
-    static string raca;
+    //static string raca;
 
   public:
     Humano(double HP, double ATK, string N, int AGI, int ARM);
@@ -86,7 +87,7 @@ class Humano : public Soldado {
 };
 
 class Sauron : public Soldado {
-    static string raca;
+    //static string raca;
 
   public:
     Sauron(double HP, double ATK, string N, int AGI, int ARM);
@@ -95,7 +96,7 @@ class Sauron : public Soldado {
 };
 
 class Orc : public Soldado {
-    static string raca;
+    //static string raca;
 
   public:
     Orc(double HP, double ATK, string N, int AGI, int ARM);
@@ -105,7 +106,7 @@ class Orc : public Soldado {
 };
 
 class OrcBerserk : public Soldado {
-    static string raca;
+    //static string raca;
 
   public:
     OrcBerserk(double HP, double ATK, string N, int AGI, int ARM, int CRIT = 10);
@@ -115,7 +116,7 @@ class OrcBerserk : public Soldado {
 };
 
 class Mago : public Soldado {
-    static string raca;
+    //static string raca;
 
   public:
     Mago(double HP, double ATK, string N, int AGI, int ARM);
@@ -125,7 +126,7 @@ class Mago : public Soldado {
 };
 
 class Hobbit : public Soldado {
-    static string raca;
+    //static string raca;
     static const int group_attack_probability[6];
     static int number_of_hobbits;
 
@@ -134,7 +135,7 @@ class Hobbit : public Soldado {
     Hobbit(double HP, double ATK, string N, int AGI, int ARM);
     void executarAcao(Soldado& inimigo, vector<shared_ptr<Soldado>>& aliados, vector<shared_ptr<Soldado>>& inimigos);
     void defender(Soldado& inimigo, double dano);
-    void descricao();
+    static void descricao();
     int getNofHobbits();
 };
 

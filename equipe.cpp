@@ -98,8 +98,7 @@ int Horda::size()
 // ALIADOS
 void Aliados::montarEquipe()
 {
-    cout << "Monte sua equipe! \n\n";
-    int cont = 5;
+    int cont = 0;
     vector<Soldado> vec = {
         Mago(200, 40, "Gandolf", 30, 40),
         Hobbit(150, 45, "Frodo", 70, 30),
@@ -114,30 +113,36 @@ void Aliados::montarEquipe()
         Anao(250, 40, "Gimli", 50, 50),
         Anao(220, 30, "Thorin", 40, 40)
     };
-    Elfo::descricao();
-    Elfo::descricao();
-    while (cont)
+    while (cont < 5)
     {
-        cout << "Escolha 5 aliados:\nRestam" << cont << "/5\n";
+        system("clear");
+        cout << "Monte sua equipe!\n";
+        Mago::descricao();
+        Hobbit::descricao();
+        Humano::descricao();
+        Elfo::descricao();
+        Anao::descricao();
+        //cout << "-----------------------------------------------------------\n";
+        cout << "Equipe: ";
+        for(auto sol: soldados) {
+            cout << sol->getNome() << " | ";
+        }
+        cout << "\nVocê deve escolher 5 aliados (" << cont << " / 5)\n";
         for(int i=0;i<vec.size();i++){
-            cout << i+1 << " - " << vec[i].getNome() << " - " << vec[i].getRaca();
+            cout << setw(2) <<i+1 << " - " << setw(7) << vec[i].getNome() << " - " << vec[i].getRaca() << "\n";
         }
         int choice = choiceHandler(vec.size());
-        soldados.push_back(make_shared<Soldado>(vec[choice]));
+        soldados.push_back(make_shared<Soldado>(vec[choice-1]));
         vec.erase(vec.begin()+choice-1);
+        cont++;
     }
-
-    // soldados.push_back(make_shared<Hobbit>(150,20,"Ebo", 90, 30));
-    // soldados.push_back(make_shared<Hobbit>(150,20,"Biggers", 90, 30));
-    // soldados.push_back(make_shared<Hobbit>(150,20,"Gandalf", 90, 30));
-    //soldados.push_back(make_shared<Hobbit>(300, 30, "Hobbit1", 80, 20));
-    //soldados.push_back(make_shared<Hobbit>(300, 30, "Hobbit2", 80, 20));
-    // soldados.push_back(make_shared<Hobbit>(500, 40, "Hobbit3", 20, 60));
-    // soldados.push_back(make_shared<Humano>(200, 30, "Aragorn", 50, 40));
-    // soldados.push_back(make_shared<Humano>(250, 25, "Boromir", 40, 45));
-    // soldados.push_back(make_shared<Hobbit>(150,20,"Frodo", 90, 30));
-    // soldados.push_back(make_shared<Hobbit>(150,15,"Sam", 80, 40));
-    // soldados.push_back(make_shared<Hobbit>(180,30,"Bilbo", 50, 40));
+    system("clear");
+    cout << "Equipe escolhida: ";
+    for(auto sol: soldados) {
+        cout << sol->getNome() << " | ";
+    }
+    cout << "\nComeçar...\n";
+    cin.get();
 }
 
 Aliados::Aliados()
