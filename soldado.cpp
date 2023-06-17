@@ -192,7 +192,7 @@ void Sauron::executarAcao(Soldado& inimigo, vector<shared_ptr<Soldado>>& aliados
         Soldado::atacar(inimigo, poderDeAtaque / 2);
         Soldado::atacar(inimigo, poderDeAtaque / 2);
         Soldado::atacar(inimigo, poderDeAtaque / 2);
-    } else if (random < 70 && saude / maxHP <= 0.3) {
+    } else if (random < 70 && saude / maxHP <= 0.4) {
         cout << nome << " entra em uma furia descontrolada! Ele ataca TODOS!\n";
         for (auto it = aliados.begin(); it != aliados.end(); it++) {
             if (!(*it)->vivo()) continue;

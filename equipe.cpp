@@ -61,33 +61,33 @@ Horda::Horda(int index)
         for (int i = 0; i < 9; i++)
         {
             string nome = "Orc" + to_string(i + 1);
-            soldados.push_back(make_shared<Orc>(100, 10, nome, 10, 10));
+            soldados.push_back(make_shared<Orc>(100, 20, nome, 10, 10));
         }
-        soldados.push_back(make_shared<OrcBerserk>(100, 10, "Orc Berserk", 10, 10));
+        soldados.push_back(make_shared<OrcBerserk>(100, 40, "Orc Berserk", 10, 15));
         break;
     case 1:
         for (int i = 0; i < 5; i++)
         {
             string nome = "Orc" + to_string(i + 1);
-            soldados.push_back(make_shared<Orc>(100, 10, nome, 10, 10));
+            soldados.push_back(make_shared<Orc>(100, 25, nome, 15, 15));
         }
         for (int i = 0; i < 3; i++)
         {
             string nome = "Orc Berserk" + to_string(i + 1);
-            soldados.push_back(make_shared<OrcBerserk>(100, 10, nome, 10, 10));
+            soldados.push_back(make_shared<OrcBerserk>(220, 45, nome, 25, 40));
         }
-        soldados.push_back(make_shared<Saruman>(250, 10, "Saruman", 5, 20));
+        soldados.push_back(make_shared<Saruman>(250, 50, "Saruman", 5, 20));
         break;
     case 2:
         for (int i = 0; i < 5; i++)
         {
             string nome = "Orc" + to_string(i + 1);
-            soldados.push_back(make_shared<Orc>(100, 10, nome, 10, 10));
+            soldados.push_back(make_shared<Orc>(200, 30, nome, 15, 15));
         }
         for (int i = 0; i < 5; i++)
         {
             string nome = "Orc Berserk" + to_string(i + 1);
-            soldados.push_back(make_shared<OrcBerserk>(100, 10, nome, 10, 10));
+            soldados.push_back(make_shared<OrcBerserk>(250, 50, nome, 25, 40));
         }
         soldados.push_back(make_shared<Sauron>(400, 50, "Dew'Artt", 10, 70));
         break;
