@@ -56,6 +56,8 @@ class Soldado {
 };
 
 class Elfo : public Soldado {
+    static string raca;
+
   public:
     Elfo(double HP, double ATK, string N, int AGI, int ARM, int CRIT = 20);
     void executarAcao(Soldado& inimigo, vector<shared_ptr<Soldado>>& aliados, vector<shared_ptr<Soldado>>& inimigos);
@@ -64,6 +66,8 @@ class Elfo : public Soldado {
 };
 
 class Anao : public Soldado {
+    static string raca;
+
   public:
     Anao(double HP, double ATK, string N, int AGI, int ARM);
     void atacar(Soldado& inimigo);
@@ -72,6 +76,8 @@ class Anao : public Soldado {
 };
 
 class Humano : public Soldado {
+    static string raca;
+
   public:
     Humano(double HP, double ATK, string N, int AGI, int ARM);
     void atacar(Soldado& inimigo, double ATK);
@@ -80,6 +86,8 @@ class Humano : public Soldado {
 };
 
 class Sauron : public Soldado {
+    static string raca;
+
   public:
     Sauron(double HP, double ATK, string N, int AGI, int ARM);
     void executarAcao(Soldado& inimigo, vector<shared_ptr<Soldado>>& aliados, vector<shared_ptr<Soldado>>& inimigos);
@@ -87,6 +95,8 @@ class Sauron : public Soldado {
 };
 
 class Orc : public Soldado {
+    static string raca;
+
   public:
     Orc(double HP, double ATK, string N, int AGI, int ARM);
     void atacar(Soldado& inimigo);
@@ -95,6 +105,8 @@ class Orc : public Soldado {
 };
 
 class OrcBerserk : public Soldado {
+    static string raca;
+
   public:
     OrcBerserk(double HP, double ATK, string N, int AGI, int ARM, int CRIT = 10);
     void atacar(Soldado& inimigo);
@@ -103,6 +115,8 @@ class OrcBerserk : public Soldado {
 };
 
 class Mago : public Soldado {
+    static string raca;
+
   public:
     Mago(double HP, double ATK, string N, int AGI, int ARM);
     void executarAcao(Soldado& inimigo, vector<shared_ptr<Soldado>>& aliados, vector<shared_ptr<Soldado>>& inimigos);
@@ -111,6 +125,7 @@ class Mago : public Soldado {
 };
 
 class Hobbit : public Soldado {
+    static string raca;
     static const int group_attack_probability[6];
     static int number_of_hobbits;
 

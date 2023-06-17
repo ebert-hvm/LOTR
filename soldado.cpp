@@ -80,6 +80,7 @@ void Soldado::imprimirStatus() {
 void Soldado::descricao() { return; }
 
 // Elfo
+string Elfo::raca = "Elfo";
 Elfo::Elfo(double HP, double ATK, string N, int AGI, int ARM, int CRIT) : Soldado(HP, ATK, N, AGI + 30, ARM - 25, CRIT) {}
 void Elfo::executarAcao(Soldado& inimigo, vector<shared_ptr<Soldado>>& aliados, vector<shared_ptr<Soldado>>& inimigos) {
     if (!vivo()) {
@@ -113,6 +114,7 @@ void Elfo::descricao() {
 }
 
 // Anao
+string Anao::raca = "Anao";
 Anao::Anao(double HP, double ATK, string N, int AGI, int ARM) : Soldado(HP, ATK - 10, N, AGI - 20, ARM + 25) {}
 void Anao::atacar(Soldado& inimigo) {
     // Extra damage when low HP
@@ -136,6 +138,7 @@ void Anao::descricao() {
 }
 
 // Humano
+string Humano::raca = "Humano";
 Humano::Humano(double HP, double ATK, string N, int AGI, int ARM) : Soldado(HP, ATK, N, AGI, ARM) {}
 void Humano::atacar(Soldado& inimigo, double ATK) {
     // Deal extra damage to low HP enemies
@@ -163,6 +166,7 @@ void Humano::descricao() {
 }
 
 // Sauron
+string Sauron::raca = "Sauron";
 Sauron::Sauron(double HP, double ATK, string N, int AGI, int ARM) : Soldado(5 * HP, ATK, N, AGI, ARM) {}
 void Sauron::executarAcao(Soldado& inimigo, vector<shared_ptr<Soldado>>& aliados, vector<shared_ptr<Soldado>>& inimigos) {
     if (!vivo()) {
@@ -201,6 +205,7 @@ void Sauron::descricao() {
 }
 
 // Orc
+string Orc::raca = "Orc";
 Orc::Orc(double HP, double ATK, std::string N, int AGI, int ARM) : Soldado(HP + 60, ATK, N, AGI - 20, ARM + 30) {}
 void Orc::atacar(Soldado& inimigo) {
     int random = RNG() % 100;
@@ -220,6 +225,7 @@ void Orc::descricao() {
 }
 
 // OrcBerserk
+string OrcBerserk::raca = "OrcBerserk";
 OrcBerserk::OrcBerserk(double HP, double ATK, string N, int AGI, int ARM, int CRIT) : Soldado(HP + 100, ATK + 10, N, AGI - 10, ARM + 20, CRIT) {}
 void OrcBerserk::atacar(Soldado& inimigo) {
 }
@@ -233,6 +239,7 @@ void OrcBerserk::descricao() {
 }
 
 // Mago
+string Mago::raca = "mago";
 Mago::Mago(double HP, double ATK, string N, int AGI, int ARM) : Soldado(HP - 100, ATK + 25, N, AGI + 10, ARM - 10) {}
 void Mago::executarAcao(Soldado& inimigo, vector<shared_ptr<Soldado>>& aliados, vector<shared_ptr<Soldado>>& inimigos) {
     if (!vivo()) {
@@ -272,6 +279,7 @@ void Mago::descricao() {
 }
 
 // Hobbit
+string Hobbit::raca = "Hobbit";
 int Hobbit::number_of_hobbits = 0;
 const int Hobbit::group_attack_probability[6] = {0, 0, 29, 20, 16, 13};
 Hobbit::~Hobbit() { number_of_hobbits--; }
