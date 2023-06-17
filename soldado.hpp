@@ -21,16 +21,8 @@ class Soldado {
     double saude, maxHP, poderDeAtaque;
     int agility, armor, critChance;
 
-    double agility_dodge_probability(int agility) {
-        if (agility > 0)
-            return 0.27 * atan((double)agility / 30) * atan((double)agility / 30);
-        return 0;
-    }
-    double armor_defend_percentage(int armor) {
-        if (armor > 0)
-            return 0.5 * atan((double)armor / 50);
-        return 0;
-    }
+    double agility_dodge_probability(int agility);
+    double armor_defend_percentage(int armor);
 
   public:
     Soldado();
@@ -64,6 +56,8 @@ class Soldado {
 };
 
 class Elfo : public Soldado {
+    static string raca;
+
   public:
     Elfo(double HP, double ATK, string N, int AGI, int ARM, int CRIT = 20);
     void executarAcao(Soldado& inimigo, vector<shared_ptr<Soldado>>& aliados, vector<shared_ptr<Soldado>>& inimigos);
@@ -72,6 +66,8 @@ class Elfo : public Soldado {
 };
 
 class Anao : public Soldado {
+    static string raca;
+
   public:
     Anao(double HP, double ATK, string N, int AGI, int ARM);
     void atacar(Soldado& inimigo);
@@ -80,6 +76,8 @@ class Anao : public Soldado {
 };
 
 class Humano : public Soldado {
+    static string raca;
+
   public:
     Humano(double HP, double ATK, string N, int AGI, int ARM);
     void atacar(Soldado& inimigo, double ATK);
@@ -88,6 +86,8 @@ class Humano : public Soldado {
 };
 
 class Sauron : public Soldado {
+    static string raca;
+
   public:
     Sauron(double HP, double ATK, string N, int AGI, int ARM);
     void executarAcao(Soldado& inimigo, vector<shared_ptr<Soldado>>& aliados, vector<shared_ptr<Soldado>>& inimigos);
@@ -95,13 +95,28 @@ class Sauron : public Soldado {
 };
 
 class Orc : public Soldado {
+    static string raca;
+
   public:
     Orc(double HP, double ATK, string N, int AGI, int ARM);
     void atacar(Soldado& inimigo);
+    void defender(double dano);
+    void descricao();
+};
+
+class OrcBerserk : public Soldado {
+    static string raca;
+
+  public:
+    OrcBerserk(double HP, double ATK, string N, int AGI, int ARM, int CRIT = 10);
+    void atacar(Soldado& inimigo);
+    void defender(Soldado& inimigo, double dano);
     void descricao();
 };
 
 class Mago : public Soldado {
+    static string raca;
+
   public:
     Mago(double HP, double ATK, string N, int AGI, int ARM);
     void executarAcao(Soldado& inimigo, vector<shared_ptr<Soldado>>& aliados, vector<shared_ptr<Soldado>>& inimigos);
@@ -110,13 +125,16 @@ class Mago : public Soldado {
 };
 
 class Hobbit : public Soldado {
+    static string raca;
     static const int group_attack_probability[6];
     static int number_of_hobbits;
 
   public:
+    ~Hobbit();
     Hobbit(double HP, double ATK, string N, int AGI, int ARM);
     void executarAcao(Soldado& inimigo, vector<shared_ptr<Soldado>>& aliados, vector<shared_ptr<Soldado>>& inimigos);
     void defender(Soldado& inimigo, double dano);
+    void descricao();
     int getNofHobbits();
 };
 
