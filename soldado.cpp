@@ -196,11 +196,11 @@ void Sauron::executarAcao(Soldado& inimigo, vector<shared_ptr<Soldado>>& aliados
         cout << nome << " entra em uma furia descontrolada! Ele ataca TODOS!\n";
         for (auto it = aliados.begin(); it != aliados.end(); it++) {
             if (!(*it)->vivo()) continue;
-            Soldado::atacar(**it, poderDeAtaque * 0.75);
+            Soldado::atacar(**it, poderDeAtaque);
         }
         for (auto it = inimigos.begin(); it != inimigos.end(); it++) {
             if (!(*it)->vivo() || (*it)->getNome() == nome) continue;
-            Soldado::atacar(**it, poderDeAtaque * 0.75);
+            Soldado::atacar(**it, poderDeAtaque);
         }
     } else {
         cout << nome << " ataca e ganha +5 ATK e recupera +30 HP!\n";
@@ -258,8 +258,8 @@ void OrcBerserk::atacar(Soldado& inimigo) {
         Soldado::atacar(inimigo, DMG);
 }
 void OrcBerserk::defender(Soldado& inimigo, double dano) {
-    cout << "A armadura de espinhos de " << nome << " causa 6 de dano a " << inimigo.getNome() << "\n";
-    inimigo.setSaude(max(1.0, inimigo.getSaude() - 6));
+    cout << "A armadura de espinhos de " << nome << " causa 5 de dano a " << inimigo.getNome() << "\n";
+    inimigo.setSaude(max(1.0, inimigo.getSaude() - 5));
     Soldado::defender(dano);
 }
 void OrcBerserk::descricao() {
@@ -341,12 +341,12 @@ void Mago::executarAcao(Soldado& inimigo, vector<shared_ptr<Soldado>>& aliados, 
         cout << nome << " aplica um efeito de cura em todos os seus aliados e os inspira:\n";
         for (auto it = aliados.begin(); it != aliados.end(); it++) {
             if (!(*it)->vivo()) continue;
-            cout << (*it)->getNome() << " recebe AGI + 2, DEF + 2, CRIT + 2, ATK + 5, HP + 20\n";
+            cout << (*it)->getNome() << " recebe AGI + 2, DEF + 2, CRIT + 2, ATK + 5, HP + 30\n";
             (*it)->setAgilidade((*it)->getAgilidade() + 2);
             (*it)->setArmadura((*it)->getArmadura() + 2);
             (*it)->setCritChance((*it)->getCritChance() + 2);
             (*it)->setPoderdeAtaque((*it)->getPoderdeAtaque() + 5);
-            (*it)->setSaude(min((*it)->getSaude() + 20, (*it)->getMaxHP()));
+            (*it)->setSaude(min((*it)->getSaude() + 30, (*it)->getMaxHP()));
         }
         cout << "\n";
     } else if (random < 60) {
@@ -372,9 +372,9 @@ void Mago::descricao() {
 // Hobbit
 //string Hobbit::raca = "Hobbit";
 int Hobbit::number_of_hobbits = 0;
-const int Hobbit::group_attack_probability[6] = {0, 0, 29, 20, 16, 13};
+const int Hobbit::group_attack_probability[6] = {0, 0, 32, 22, 18, 15};
 Hobbit::~Hobbit() { number_of_hobbits--; }
-Hobbit::Hobbit(double HP, double ATK, string N, int AGI, int ARM) : Soldado(HP, ATK - 20, N, AGI + 20, ARM - 10) {
+Hobbit::Hobbit(double HP, double ATK, string N, int AGI, int ARM) : Soldado(HP, ATK - 20, N, AGI + 20, ARM) {
     number_of_hobbits++; raca = "Hobbit";
 }
 void Hobbit::executarAcao(Soldado& inimigo, vector<shared_ptr<Soldado>>& aliados, vector<shared_ptr<Soldado>>& inimigos) {

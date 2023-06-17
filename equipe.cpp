@@ -74,7 +74,7 @@ Horda::Horda(int index)
         for (int i = 0; i < 3; i++)
         {
             string nome = "Orc Berserk" + to_string(i + 1);
-            soldados.push_back(make_shared<OrcBerserk>(220, 45, nome, 25, 40));
+            soldados.push_back(make_shared<OrcBerserk>(220, 45, nome, 25, 25));
         }
         soldados.push_back(make_shared<Saruman>(250, 50, "Saruman", 5, 20));
         break;
@@ -87,7 +87,7 @@ Horda::Horda(int index)
         for (int i = 0; i < 5; i++)
         {
             string nome = "Orc Berserk" + to_string(i + 1);
-            soldados.push_back(make_shared<OrcBerserk>(250, 50, nome, 25, 40));
+            soldados.push_back(make_shared<OrcBerserk>(220, 50, nome, 25, 30));
         }
         soldados.push_back(make_shared<Sauron>(400, 50, "Dew'Artt", 10, 70));
         break;
@@ -109,13 +109,13 @@ void Aliados::montarEquipe()
     int cont = 0;
     vector<shared_ptr<Soldado>> vec = {
         make_shared<Mago>(400, 40, "Gandolf", 30, 40),
-        make_shared<Hobbit>(200, 45, "Frodo", 70, 30),
-        make_shared<Hobbit>(200, 40, "Bilbo", 70, 30),
-        make_shared<Hobbit>(200, 35, "Sam", 70, 30),
-        make_shared<Hobbit>(200, 32, "Marry", 70, 30),
-        make_shared<Hobbit>(200, 30, "Pippin", 70, 30),
-        make_shared<Humano>(250, 50, "Aragorn", 50, 45),
-        make_shared<Humano>(250, 40, "Boromir", 40, 40),
+        make_shared<Hobbit>(240, 48, "Frodo", 70, 30),
+        make_shared<Hobbit>(225, 45, "Bilbo", 70, 30),
+        make_shared<Hobbit>(220, 36, "Sam", 70, 30),
+        make_shared<Hobbit>(210, 36, "Marry", 70, 30),
+        make_shared<Hobbit>(200, 50, "Pippin", 70, 30),
+        make_shared<Humano>(300, 50, "Aragorn", 50, 45),
+        make_shared<Humano>(300, 40, "Boromir", 40, 40),
         make_shared<Elfo>(250, 30, "Legolas", 50, 45),
         make_shared<Elfo>(250, 30, "Elrond", 40, 40),
         make_shared<Anao>(300, 40, "Gimli", 50, 50),
