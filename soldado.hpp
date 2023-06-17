@@ -68,7 +68,7 @@ class Elfo : public Soldado {
     Elfo(double HP, double ATK, string N, int AGI, int ARM, int CRIT = 20);
     void executarAcao(Soldado& inimigo, vector<shared_ptr<Soldado>>& aliados, vector<shared_ptr<Soldado>>& inimigos);
     // void defender(double dano);
-    void descricao();
+    static void descricao();
 };
 
 class Anao : public Soldado {
@@ -76,7 +76,7 @@ class Anao : public Soldado {
     Anao(double HP, double ATK, string N, int AGI, int ARM);
     void atacar(Soldado& inimigo);
     void defender(double dano);
-    void descricao();
+    static void descricao();
 };
 
 class Humano : public Soldado {
@@ -84,7 +84,7 @@ class Humano : public Soldado {
     Humano(double HP, double ATK, string N, int AGI, int ARM);
     void atacar(Soldado& inimigo, double ATK);
     void defender(Soldado& inimigo, double dano);
-    void descricao();
+    static void descricao();
 };
 
 class Sauron : public Soldado {
@@ -106,7 +106,7 @@ class Mago : public Soldado {
     Mago(double HP, double ATK, string N, int AGI, int ARM);
     void executarAcao(Soldado& inimigo, vector<shared_ptr<Soldado>>& aliados, vector<shared_ptr<Soldado>>& inimigos);
     void atacar(Soldado& inimigo);
-    void descricao();
+    static void descricao();
 };
 
 class Hobbit : public Soldado {
