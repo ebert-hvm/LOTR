@@ -76,7 +76,7 @@ Horda::Horda(int index)
             string nome = "Orc Berserk" + to_string(i + 1);
             soldados.push_back(make_shared<OrcBerserk>(100, 10, nome, 10, 10));
         }
-        //soldados.push_back(make_shared<Saruman>(200, 50, "Saruman", 40, 30));
+        soldados.push_back(make_shared<Saruman>(250, 10, "Saruman", 5, 20));
         break;
     case 2:
         for (int i = 0; i < 5; i++)
@@ -109,18 +109,18 @@ void Aliados::montarEquipe()
 {
     int cont = 0;
     vector<Soldado> vec = {
-        Mago(200, 40, "Gandolf", 30, 40),
-        Hobbit(150, 45, "Frodo", 70, 30),
-        Hobbit(150, 40, "Bilbo", 70, 30),
-        Hobbit(150, 35, "Sam", 70, 30),
-        Hobbit(150, 32, "Marry", 70, 30),
-        Hobbit(150, 30, "Pippin", 70, 30),
-        Humano(200, 50, "Aragorn", 50, 45),
-        Humano(200, 40, "Boromir", 40, 40),
-        Elfo(200, 30, "Legolas", 50, 45),
-        Elfo(200, 30, "Elrond", 40, 40),
-        Anao(250, 40, "Gimli", 50, 50),
-        Anao(220, 30, "Thorin", 40, 40)
+        Mago(400, 40, "Gandolf", 30, 40),
+        Hobbit(200, 45, "Frodo", 70, 30),
+        Hobbit(200, 40, "Bilbo", 70, 30),
+        Hobbit(200, 35, "Sam", 70, 30),
+        Hobbit(200, 32, "Marry", 70, 30),
+        Hobbit(200, 30, "Pippin", 70, 30),
+        Humano(250, 50, "Aragorn", 50, 45),
+        Humano(250, 40, "Boromir", 40, 40),
+        Elfo(250, 30, "Legolas", 50, 45),
+        Elfo(250, 30, "Elrond", 40, 40),
+        Anao(300, 40, "Gimli", 50, 50),
+        Anao(280, 30, "Thorin", 40, 40)
     };
     while (cont < 5)
     {
