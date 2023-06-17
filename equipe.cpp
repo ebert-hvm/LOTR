@@ -89,8 +89,7 @@ Horda::Horda(int index)
             string nome = "Orc Berserk" + to_string(i + 1);
             soldados.push_back(make_shared<OrcBerserk>(100, 10, nome, 10, 10));
         }
-        //soldados.push_back(make_shared<Saruman>(200, 50, "Saruman", 40, 30));
-        soldados.push_back(make_shared<Sauron>(400, 50, "Duarte", 10, 70));
+        soldados.push_back(make_shared<Sauron>(400, 50, "Dew'Artt", 10, 70));
         break;
     default:
         throw("Indice inválido!");
@@ -108,19 +107,19 @@ int Horda::size()
 void Aliados::montarEquipe()
 {
     int cont = 0;
-    vector<Soldado> vec = {
-        Mago(400, 40, "Gandolf", 30, 40),
-        Hobbit(200, 45, "Frodo", 70, 30),
-        Hobbit(200, 40, "Bilbo", 70, 30),
-        Hobbit(200, 35, "Sam", 70, 30),
-        Hobbit(200, 32, "Marry", 70, 30),
-        Hobbit(200, 30, "Pippin", 70, 30),
-        Humano(250, 50, "Aragorn", 50, 45),
-        Humano(250, 40, "Boromir", 40, 40),
-        Elfo(250, 30, "Legolas", 50, 45),
-        Elfo(250, 30, "Elrond", 40, 40),
-        Anao(300, 40, "Gimli", 50, 50),
-        Anao(280, 30, "Thorin", 40, 40)
+    vector<shared_ptr<Soldado>> vec = {
+        make_shared<Mago>(400, 40, "Gandolf", 30, 40),
+        make_shared<Hobbit>(200, 45, "Frodo", 70, 30),
+        make_shared<Hobbit>(200, 40, "Bilbo", 70, 30),
+        make_shared<Hobbit>(200, 35, "Sam", 70, 30),
+        make_shared<Hobbit>(200, 32, "Marry", 70, 30),
+        make_shared<Hobbit>(200, 30, "Pippin", 70, 30),
+        make_shared<Humano>(250, 50, "Aragorn", 50, 45),
+        make_shared<Humano>(250, 40, "Boromir", 40, 40),
+        make_shared<Elfo>(250, 30, "Legolas", 50, 45),
+        make_shared<Elfo>(250, 30, "Elrond", 40, 40),
+        make_shared<Anao>(300, 40, "Gimli", 50, 50),
+        make_shared<Anao>(280, 30, "Thorin", 40, 40)
     };
     while (cont < 5)
     {
@@ -138,10 +137,10 @@ void Aliados::montarEquipe()
         }
         cout << "\nVocê deve escolher 5 aliados (" << cont << " / 5)\n";
         for(int i=0;i<vec.size();i++){
-            cout << setw(2) <<i+1 << " - " << setw(7) << vec[i].getNome() << " - " << vec[i].getRaca() << "\n";
+            cout << setw(2) <<i+1 << " - " << setw(7) << vec[i]->getNome() << " - " << vec[i]->getRaca() << "\n";
         }
         int choice = choiceHandler(vec.size());
-        soldados.push_back(make_shared<Soldado>(vec[choice-1]));
+        soldados.push_back(vec[choice-1]);
         vec.erase(vec.begin()+choice-1);
         cont++;
     }
