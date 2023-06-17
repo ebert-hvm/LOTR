@@ -311,7 +311,7 @@ void Saruman::executarAcao(Soldado& inimigo, vector<shared_ptr<Soldado>>& aliado
     } else if (random < 50) {
         cout << nome << " suga a forca de " << inimigo.getNome() << ", se curando no processo\n\n";
         setSaude(min(maxHP, saude + 30));
-        inimigo.setPoderdeAtaque(0.9 * inimigo.getPoderdeAtaque() - 5);
+        inimigo.setPoderdeAtaque(min(0.9 * inimigo.getPoderdeAtaque() - 5, 10.0));
         inimigo.setAgilidade(inimigo.getAgilidade() - 3);
         inimigo.setArmadura(inimigo.getArmadura() - 3);
     } else {
